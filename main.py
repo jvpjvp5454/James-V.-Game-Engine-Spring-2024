@@ -8,19 +8,27 @@ from sprites import *
 import sys
 from os import path
 
-def draw_text():
-    pass
+
 
 class Game:
     # Initialization and running the game
     def __init__(self):
         pg.init
+        pg.font.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
         self.running = True
         pg.key.set_repeat(500, 100)
         self.load_data()
+
+    def draw_text(self, surface, text, size, color, x, y):
+        font_name = pg.font.match_font('arial')
+        font = pg.font.Font(font_name, size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect()
+        text_rect.topleft = (x,y)
+        surface.blit(text_surface, text_rect)
 
     # loads saves
     def load_data(self):
@@ -34,7 +42,8 @@ class Game:
         # start all vars setup groups and instantiate classes
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
-        self.collectables = pg.sprite.Group()
+        self.coins = pg.sprite.Group()
+        self.pwup = pg.sprite.Group()
         #self.player = Player(self, 10, 10)
         #for x in range(10, 20):
             #Wall(self, x, 5)
@@ -47,7 +56,9 @@ class Game:
                 if tile == 'p':
                     self.player = Player(self, col, row)
                 if tile == 't':     
-                    Coin(self, col, row)
+                    Powerup(self, col, row)
+                if tile == 'e':
+                    Enemy(self,col,row)
 
     def run(self):
         self.playing = True
@@ -93,6 +104,8 @@ class Game:
         self.all_sprites.draw(self.screen)
         self.draw_grid()
         pg.display.flip()
+        self.draw_text(self.screen, str(self.player.moneybag), 64, WHITE, 1, 1)
+
 
     def show_start_screen(self):
         pass
