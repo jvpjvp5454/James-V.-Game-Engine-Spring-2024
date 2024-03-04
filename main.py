@@ -1,5 +1,9 @@
 # This file was created by James von Ploennies
 
+# Goals:
+# add new enemy,
+# death
+# powerups 
 
 import pygame as pg 
 from settings import *
