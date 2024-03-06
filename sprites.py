@@ -153,11 +153,11 @@ class Coin(Sprite):
 
 class Enemy(Sprite):
     def __init__(self, game, x, y):
-        self.groups = game.all_sprites
+        self.groups = game.all_sprites, game.enemies
         Sprite.__init__(self, self.groups)
         self.game = game
         self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(RED)
+        self.image.fill(YELLOW)
         self.x = x
         self.y = y
         self.rect = self.image.get_rect( )
@@ -166,34 +166,4 @@ class Enemy(Sprite):
         self.vs, self.vy = 0, 0
         self.vx, self.vy = 0, 0
 
-    def update(self):
-        #self.rect.x = self.x * TILESIZE
-        #self.rect.y = self.y * TILESIZE
-        self.vx = random.randint(1,10)
-        self.vy = random.randint(1,10)
-        self.x += self.vx * self.game.dt
-        self.y += self.vy * self.game.dt
-        self.rect.x = self.x
-        self.rect.y = self.y
-        self.collide_with_walls('x')
-        self.collide_with_walls('y')
 
-    def collide_with_walls(self, dir):
-        if dir == 'x':
-            hits = pg.sprite.spritecollide(self, self.game.walls, False)
-            if hits:
-                if self.vx > 0:
-                    self.x = hits[0].rect.left - self.rect.width
-                if self.vx < 0:
-                    self.x = hits[0].rect.right 
-                self.vx = 0
-                self.rect.x = self.x
-        if dir == 'y':
-            hits = pg.sprite.spritecollide(self,self.game.walls, False)
-            if hits:
-                if self.vy > 0:
-                    self.y = hits[0].rect.top - self.rect.height
-                if self.vy < 0:
-                    self.y = hits[0].rect.bottom 
-                self.vy = 0
-                self.rect.y = self.y
