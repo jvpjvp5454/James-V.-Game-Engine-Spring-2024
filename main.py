@@ -108,7 +108,7 @@ class Game:
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
         self.draw_grid()
-        pg.display.flip()
+        pg.display.flip
 
 
     def show_start_screen(self):

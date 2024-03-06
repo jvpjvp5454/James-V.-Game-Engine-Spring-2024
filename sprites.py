@@ -150,6 +150,7 @@ class Coin(Sprite):
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
         self.vs, self.vy = 0, 0
+        self.speed = 1
 
 class Enemy(Sprite):
     def __init__(self, game, x, y):
@@ -161,10 +162,10 @@ class Enemy(Sprite):
         self.x = x
         self.y = y
         self.rect = self.image.get_rect( )
-        self.rect.x = x * TILESIZE
-        self.rect.y = y * TILESIZE
-        self.vs, self.vy = 0, 0
-        self.vx, self.vy = 0, 0
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
+        self.vx, self.vy = 100, 100
+
     
     def collide_with_walls(self, dir):
             if dir == 'x':
@@ -177,10 +178,11 @@ class Enemy(Sprite):
                 if hits:
                     self.vy *= -1
                     self.rect.y = self.y
+
     def update(self):
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt
-            
+        
         if self.rect.x < self.game.player.rect.x:
             self.vx = 100
         if self.rect.x > self.game.player.rect.x:
@@ -193,3 +195,4 @@ class Enemy(Sprite):
         self.collide_with_walls('x')
         self.rect.y = self.y
         self.collide_with_walls('y')
+ 
