@@ -109,7 +109,6 @@ class Game:
         self.all_sprites.draw(self.screen)
         self.draw_grid()
         pg.display.flip()
-        self.draw_text(self.screen, str(self.player.moneybag), 64, WHITE, 1, 1)
 
 
     def show_start_screen(self):
