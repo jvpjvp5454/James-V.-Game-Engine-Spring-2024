@@ -34,6 +34,7 @@ class Game:
         text_rect.topleft = (x,y)
         surface.blit(text_surface, text_rect)
 
+
     # loads saves
     def load_data(self):
         game_folder = path.dirname(__file__)
@@ -49,6 +50,7 @@ class Game:
         self.coins = pg.sprite.Group()
         self.pwup = pg.sprite.Group()
         self.enemies = pg.sprite.Group()
+        self.players = pg.sprite.Group()
         #self.player = Player(self, 10, 10)
         #for x in range(10, 20):
             #Wall(self, x, 5)
@@ -64,6 +66,8 @@ class Game:
                     Powerup(self, col, row)
                 if tile == 'e':
                     Enemy(self,col,row)
+                if tile == 'c':
+                    Coin(self,col,row)
 
     def run(self):
         self.playing = True
@@ -108,7 +112,7 @@ class Game:
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
         self.draw_grid()
-        pg.display.flip
+        pg.display.flip()
 
 
     def show_start_screen(self):
