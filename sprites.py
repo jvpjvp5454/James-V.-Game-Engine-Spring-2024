@@ -160,7 +160,7 @@ class Enemy(Sprite):
         Sprite.__init__(self, self.groups)
         self.game = game
         self.image = game.enemy_image
-        self.image.fill(RED)
+        #self.image.fill(RED)
         self.x = x
         self.y = y
         self.rect = self.image.get_rect( )
