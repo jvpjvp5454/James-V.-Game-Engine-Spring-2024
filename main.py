@@ -11,7 +11,7 @@ from random import randint
 from sprites import *
 import sys
 from os import path
-
+from images import *
 
 
 class Game:
@@ -39,9 +39,12 @@ class Game:
     def load_data(self):
         game_folder = path.dirname(__file__)
         self.map_data = []
+        images = path.join(game_folder, 'images')
         with open(path.join(game_folder, 'map.txt'), 'rt') as f:
             for line in f:
                 self.map_data.append(line)
+
+        self.enemy_image = pg.image.load(path.join(images, 'chihuahua.jpg')).convert_alpha()
 
     def new(self):
         # start all vars setup groups and instantiate classes

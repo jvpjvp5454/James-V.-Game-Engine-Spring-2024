@@ -4,6 +4,8 @@
 
 # create a wall class
 
+from images import *
+
 import random 
 import pygame as pg
 from settings import *
@@ -157,7 +159,7 @@ class Enemy(Sprite):
         self.groups = game.all_sprites, game.enemies
         Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image = game.enemy_image
         self.image.fill(RED)
         self.x = x
         self.y = y
