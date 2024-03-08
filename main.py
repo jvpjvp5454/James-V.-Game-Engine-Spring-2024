@@ -2,8 +2,8 @@
 
 # Goals:
 # add new enemy,
-# death
-# powerups 
+# death (added) 
+# powerups (added, increases speed)
 
 import pygame as pg 
 from settings import *
