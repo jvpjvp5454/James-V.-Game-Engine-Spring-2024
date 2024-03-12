@@ -5,7 +5,7 @@
 # create a wall class
 
 from images import *
-
+import time
 import random 
 import pygame as pg
 from settings import *
@@ -203,3 +203,70 @@ class Enemy(Sprite):
     def collide_with_player(self, dir):
         hits = pg.sprite.spritecollide(self, self.game.players, True)
  
+ 
+ 
+class Enemy2(Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.enemies
+        Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = game.enemy_image
+        #self.image.fill(RED)
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect( )
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
+        self.vx, self.vy = 100, 100
+
+    
+    def collide_with_walls(self, dir):
+            if dir == 'x':
+                hits = pg.sprite.spritecollide(self, self.game.walls, False)
+                if hits:
+                    self.vx *= -1
+                    self.rect.x = self.x
+            if dir == 'y':
+                hits = pg.sprite.spritecollide(self, self.game.walls, False)
+                if hits:
+                    self.vy *= -1
+                    self.rect.y = self.y
+
+    def update(self):
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
+        
+        cd = 0
+        if cd == 0:
+            if self.rect.x < self.game.player.rect.x:
+                self.vx = 500
+                cd == 1
+                pg.time.wait(3)
+                cd == 0
+        if cd == 0:
+            if self.rect.x > self.game.player.rect.x:
+                self.vx = -500   
+                cd == 1
+                pg.time.wait(3)
+                cd == 0 
+        if cd == 0:
+            if self.rect.y < self.game.player.rect.y:
+                self.vy = 500
+                cd == 1
+                pg.time.wait(3)
+                cd == 0
+        if cd == 0:
+            if self.rect.y > self.game.player.rect.y:
+                self.vy = -500
+                cd == 1
+                pg.time.wait(3)
+                cd == 0
+        self.rect.x = self.x
+        self.collide_with_walls('x')
+        self.rect.y = self.y
+        self.collide_with_walls('y')
+        self.collide_with_player('x')
+        self.collide_with_player('y')
+
+    def collide_with_player(self, dir):
+        hits = pg.sprite.spritecollide(self, self.game.players, True)

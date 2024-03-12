@@ -1,7 +1,7 @@
 # This file was created by James von Ploennies
 
 # Goals:
-# add new enemy,
+# add new enemy
 # death (added) 
 # powerups (added, increases speed)
 
@@ -71,7 +71,8 @@ class Game:
                     Enemy(self,col,row)
                 if tile == 'c':
                     Coin(self,col,row)
-
+                if tile == 'x':
+                    Enemy2(self,col,row)
     def run(self):
         self.playing = True
         while self.playing:
