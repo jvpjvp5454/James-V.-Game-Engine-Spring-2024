@@ -230,8 +230,7 @@ class Enemy2(Sprite):
     def update(self):
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt 
-        global enemy2cd
-        if not self.cd == 1:
+        if not self.cd > pg.time.get_ticks():
             if self.rect.x < self.game.player.rect.x:
                 self.vx = 300
             if self.rect.x > self.game.player.rect.x:
@@ -240,9 +239,7 @@ class Enemy2(Sprite):
                 self.vy = 300
             if self.rect.y > self.game.player.rect.y:
                 self.vy = -300         
-            self.cd += 1
-            self.cooldown
-            return
+                self.cd = pg.time.get_ticks() + 1500
 
         self.rect.x = self.x
         self.rect.y = self.y
@@ -250,10 +247,7 @@ class Enemy2(Sprite):
         self.collide_with_walls('y')
         self.collide_with_player('x')
         self.collide_with_player('y')
+        print(self.cd)
 
     def collide_with_player(self, dir):
         hits = pg.sprite.spritecollide(self, self.game.players, True)
-
-    def cooldown(self):
-        pg.time.wait(3)
-        self.cd -= 1
