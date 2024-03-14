@@ -1,9 +1,10 @@
 # This file was created by James von Ploennies
 
 # Goals:
-# add new enemy
+# add new enemy (added, charging chihuahua)
 # death (added) 
 # powerups (added, increases speed)
+# start screen (WIP)
 
 import pygame as pg 
 from settings import *
@@ -45,6 +46,7 @@ class Game:
                 self.map_data.append(line)
 
         self.enemy_image = pg.image.load(path.join(images, 'chihuahua.jpg')).convert_alpha()
+        self.enemy_image2 = pg.image.load(path.join(images, 'angerchihuahua.jpg')).convert_alpha()
 
     def new(self):
         # start all vars setup groups and instantiate classes

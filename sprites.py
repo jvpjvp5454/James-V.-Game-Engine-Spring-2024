@@ -243,6 +243,7 @@ class Enemy2(Sprite):
         self.collide_with_player('y')
         hits = pg.sprite.spritecollide(self, self.game.walls, False)
         if self.speedcd < pg.time.get_ticks() and not hits:
+            self.image = self.game.enemy_image  
             if self.vy == -500:
                 self.vy = -100
             if self.vy == 500:
@@ -261,6 +262,7 @@ class Enemy2(Sprite):
 
     def charge_at_player(self):
         if not self.cd > pg.time.get_ticks():
+            self.image = self.game.enemy_image2
             if self.rect.x < self.game.player.rect.x:
                 self.vx = 500
             if self.rect.x > self.game.player.rect.x:
@@ -268,6 +270,6 @@ class Enemy2(Sprite):
             if self.rect.y < self.game.player.rect.y:
                 self.vy = 500
             if self.rect.y > self.game.player.rect.y:
-                self.vy = -500        
+                self.vy = -500      
             self.speedcd = pg.time.get_ticks() + 500
             self.cd = pg.time.get_ticks() + 2000
