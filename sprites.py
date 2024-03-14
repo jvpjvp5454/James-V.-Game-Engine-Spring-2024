@@ -212,24 +212,46 @@ class Enemy2(Sprite):
         self.rect = self.image.get_rect()
         self.x = x * TILESIZE
         self.y = y * TILESIZE
-        self.vx, self.vy = 100, 100
+        self.vx, self.vy = 0, 0
         self.cd = 0
-
+        self.speedcd = 0
+        
     
     def collide_with_walls(self, dir):
-            if dir == 'x':
-                hits = pg.sprite.spritecollide(self, self.game.walls, False)
-                if hits:
-                    self.vx *= -1
-                    self.rect.x = self.x
-            if dir == 'y':
-                hits = pg.sprite.spritecollide(self, self.game.walls, False)
-                if hits:
-                    self.vy *= -1
-                    self.rect.y = self.y
+        if dir == 'x':
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                self.vx *= -1
+                self.rect.x = self.x
+
+        if dir == 'y':
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                self.vy *= -1
+                self.rect.y = self.y
+
+  
     def update(self):
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt 
+        self.rect.x = self.x
+        self.rect.y = self.y
+        self.charge_at_player()
+        self.collide_with_walls('x')
+        self.collide_with_walls('y')
+        self.collide_with_player('x')
+        self.collide_with_player('y')
+        hits = pg.sprite.spritecollide(self, self.game.walls, False)
+        if self.speedcd < pg.time.get_ticks() and not hits:
+            self.vy = 100
+            self.vx = 100
+
+
+
+    def collide_with_player(self, dir):
+        hits = pg.sprite.spritecollide(self, self.game.players, True)
+
+    def charge_at_player(self):
         if not self.cd > pg.time.get_ticks():
             if self.rect.x < self.game.player.rect.x:
                 self.vx = 300
@@ -238,16 +260,6 @@ class Enemy2(Sprite):
             if self.rect.y < self.game.player.rect.y:
                 self.vy = 300
             if self.rect.y > self.game.player.rect.y:
-                self.vy = -300         
-                self.cd = pg.time.get_ticks() + 1500
-
-        self.rect.x = self.x
-        self.rect.y = self.y
-        self.collide_with_walls('x')
-        self.collide_with_walls('y')
-        self.collide_with_player('x')
-        self.collide_with_player('y')
-        print(self.cd)
-
-    def collide_with_player(self, dir):
-        hits = pg.sprite.spritecollide(self, self.game.players, True)
+                self.vy = -300        
+            self.speedcd = pg.time.get_ticks() + 1000
+            self.cd = pg.time.get_ticks() + 2000
