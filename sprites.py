@@ -268,7 +268,7 @@ class Enemy2(Sprite):
         if hits:
             self.currenttime = pg.time.get_ticks() / 1000
             pg.quit()
-            print("You survived" + str(self.currenttime) + "seconds")
+            print("You survived " + str(self.currenttime) + " seconds")
             sys.exit()
     def charge_at_player(self):
         if not self.cd > pg.time.get_ticks():
