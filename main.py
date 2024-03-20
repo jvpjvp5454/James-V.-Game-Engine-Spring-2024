@@ -13,7 +13,8 @@ from sprites import *
 import sys
 from os import path
 from images import *
-
+from math import floor
+from util import *
 
 class Game:
     # Initialization and running the game
@@ -26,6 +27,7 @@ class Game:
         self.running = True
         pg.key.set_repeat(500, 100)
         self.load_data()
+        self.clock = pg.time.Clock()
 
     def draw_text(self, surface, text, size, color, x, y):
         font_name = pg.font.match_font('arial')
@@ -34,6 +36,7 @@ class Game:
         text_rect = text_surface.get_rect()
         text_rect.topleft = (x,y)
         surface.blit(text_surface, text_rect)
+
 
 
     # loads saves
@@ -75,6 +78,8 @@ class Game:
                     Coin(self,col,row)
                 if tile == 'x':
                     Enemy2(self,col,row)
+        self.cooldown = Timer(self)
+
     def run(self):
         self.playing = True
         while self.playing:
@@ -108,6 +113,8 @@ class Game:
 
     def update(self):
         self.all_sprites.update()
+        
+        self.cooldown.ticking()
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
@@ -119,24 +126,23 @@ class Game:
         self.all_sprites.draw(self.screen)
         self.draw_grid()
         pg.display.flip()
+        self.draw_text(self.screen, str(self.cooldown.current_time), 24, WHITE, WIDTH/2 - 32, 2)
 
 
-    def show_start_screen(self):
-        pass
 
-    def show_go_screen(self):
-        pass
+
+    
 
 g = Game()
-
-game = Game()
-# g.show_start_screen()
 while True:
     g.new()
     g.run()
-    # g.show_go_screen()
+   
+
     
 # instatiationa
 
+
     
+
 s
