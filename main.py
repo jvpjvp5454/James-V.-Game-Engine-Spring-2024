@@ -113,7 +113,6 @@ class Game:
 
     def update(self):
         self.all_sprites.update()
-        
         self.cooldown.ticking()
 
     def draw_grid(self):
@@ -125,8 +124,8 @@ class Game:
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
         self.draw_grid()
-        pg.display.flip()
         self.draw_text(self.screen, str(self.cooldown.current_time), 24, WHITE, WIDTH/2 - 32, 2)
+        pg.display.flip()
 
 
 
