@@ -30,14 +30,14 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
 
     def get_keys(self):
         self.vx, self.vy = 0, 0
-
+    # kills coins and adds money
     def collide_with_group(self, group, kill):
         hits = pg.sprite.spritecollide(self, group, kill)
         if hits:
             if str(hits[0].__class__.__name__) == "Coin":
                 self.moneybag += 1
                 print(self.moneybag)
-
+    # changes velcoity after hitting wall
     def collide_with_walls(self, dir):
         if dir == 'x':
             hits = pg.sprite.spritecollide(self, self.game.walls, False)
@@ -57,7 +57,7 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
                     self.y = hits[0].rect.bottom 
                 self.vy = 0
                 self.rect.y = self.y
-
+    # increases speed and kills powerup
     def collide_with_powerup(self, dir):
         hits = pg.sprite.spritecollide(self, self.game.pwup, True)
         global PLAYER_SPEED
@@ -157,6 +157,7 @@ class Coin(Sprite):
         self.vs, self.vy = 0, 0
 
 class Enemy(Sprite):
+    # enemy init
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.enemies
         Sprite.__init__(self, self.groups)
@@ -168,7 +169,7 @@ class Enemy(Sprite):
         self.y = y * TILESIZE
         self.vx, self.vy = 100, 100
 
-    
+    # checks for wall collision and redirects based on velocity
     def collide_with_walls(self, dir):
             if dir == 'x':
                 hits = pg.sprite.spritecollide(self, self.game.walls, False)
@@ -180,7 +181,7 @@ class Enemy(Sprite):
                 if hits:
                     self.vy *= -1
                     self.rect.y = self.y
-
+    # changes velocity based on position relative to player
     def update(self):
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt
@@ -200,6 +201,7 @@ class Enemy(Sprite):
         self.collide_with_player('x')
         self.collide_with_player('y')
 
+    # checks for player collision and ends game
     def collide_with_player(self, dir):
         hits = pg.sprite.spritecollide(self, self.game.players, True)
         if hits:
@@ -236,7 +238,7 @@ class Enemy2(Sprite):
                 self.vy *= -1
                 self.rect.y = self.y
 
-  
+    # same as previous but with increased speed
     def update(self):
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt 
@@ -262,7 +264,7 @@ class Enemy2(Sprite):
 
 
 
-
+    # check collision and ends game
     def collide_with_player(self, dir):
         hits = pg.sprite.spritecollide(self, self.game.players, True)
         if hits:
@@ -270,6 +272,8 @@ class Enemy2(Sprite):
             pg.quit()
             print("You survived " + str(self.currenttime) + " seconds")
             sys.exit()
+
+    # special charging script for second enemy
     def charge_at_player(self):
         if not self.cd > pg.time.get_ticks():
             self.image = self.game.enemy_image2

@@ -108,11 +108,11 @@ class Game:
                     #     self.player.move(dy=-1)
                     # if event.key == pg.K_DOWN:
                     #     self.player.move(dy=1)
-    
+    # quits game
     def quit(self):
         pg.quit()
         sys.exit()
-
+    # updates pretty much everything
     def update(self):
         self.all_sprites.update()
         if not self.players == '<Group(0 sprites)>':
