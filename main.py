@@ -5,6 +5,8 @@
 # death (added) 
 # powerups (added, increases speed)
 # start screen (WIP)
+# add survival timer (added)
+# add waves increases
 
 import pygame as pg 
 from settings import *
@@ -78,7 +80,7 @@ class Game:
                     Coin(self,col,row)
                 if tile == 'x':
                     Enemy2(self,col,row)
-        self.cooldown = Timer(self)
+        self.survtime = Timer(self)
 
     def run(self):
         self.playing = True
@@ -113,7 +115,8 @@ class Game:
 
     def update(self):
         self.all_sprites.update()
-        self.cooldown.ticking()
+        if not self.players == '<Group(0 sprites)>':
+            self.survtime.ticking()
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
@@ -124,7 +127,7 @@ class Game:
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
         self.draw_grid()
-        self.draw_text(self.screen, str(self.cooldown.current_time), 24, WHITE, WIDTH/2 - 32, 2)
+        self.draw_text(self.screen, str(self.survtime.current_time), 24, WHITE, WIDTH/2 - 32, 2)
         pg.display.flip()
 
 

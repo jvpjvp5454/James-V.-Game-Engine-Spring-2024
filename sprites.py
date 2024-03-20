@@ -10,7 +10,9 @@ import random
 import pygame as pg
 from settings import *
 from pygame.sprite import Sprite
+import sys
 money = 0
+
 
 class Player(Sprite): # sprite class, neccesary properties such as x and y
     def __init__(self, game, x, y):
@@ -200,7 +202,11 @@ class Enemy(Sprite):
 
     def collide_with_player(self, dir):
         hits = pg.sprite.spritecollide(self, self.game.players, True)
- 
+        if hits:
+            self.currenttime = pg.time.get_ticks() / 1000
+            pg.quit()
+            print("You survived" + str(self.currenttime) + "seconds")
+            sys.exit()
  
 class Enemy2(Sprite):
     def __init__(self, game, x, y):
@@ -259,7 +265,11 @@ class Enemy2(Sprite):
 
     def collide_with_player(self, dir):
         hits = pg.sprite.spritecollide(self, self.game.players, True)
-
+        if hits:
+            self.currenttime = pg.time.get_ticks() / 1000
+            pg.quit()
+            print("You survived" + str(self.currenttime) + "seconds")
+            sys.exit()
     def charge_at_player(self):
         if not self.cd > pg.time.get_ticks():
             self.image = self.game.enemy_image2
