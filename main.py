@@ -7,6 +7,7 @@
 # start screen (WIP)
 # add survival timer (added)
 # add waves increases
+# trying to make it so you can see ur time in pygame instead of console but idk howwsa
 
 import pygame as pg 
 from settings import *
