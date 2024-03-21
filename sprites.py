@@ -1,8 +1,5 @@
 # This file was created by James von Ploennies
 
-# create a player class
-
-# create a wall class
 
 from images import *
 import time
@@ -80,7 +77,7 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
     # def move(self, dx = 0, dy = ):
        # self.x += dx
        # self.y += dy
-
+# detects key presses and changes velocity
     def get_keys(self):
         self.vx, self.vy = 0, 0
         keys = pg.key.get_pressed()
@@ -128,7 +125,7 @@ class Wall(Sprite):
         self.rect.y = y * TILESIZE
         self.vs, self.vy = 0, 0
 
-class Powerup(Sprite):
+class Powerup(Sprite): # Powerup class
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.pwup
         Sprite.__init__(self, self.groups)
@@ -142,7 +139,7 @@ class Powerup(Sprite):
         self.rect.y = y * TILESIZE
         self.vs, self.vy = 0, 0
 
-class Coin(Sprite):
+class Coin(Sprite): #coin class
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.coins
         Sprite.__init__(self, self.groups)
@@ -156,7 +153,7 @@ class Coin(Sprite):
         self.rect.y = y * TILESIZE
         self.vs, self.vy = 0, 0
 
-class Enemy(Sprite):
+class Enemy(Sprite): # first enemy, simple directly navigates to player
     # enemy init
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.enemies
@@ -210,7 +207,7 @@ class Enemy(Sprite):
             print("You survived" + str(self.currenttime) + "seconds")
             sys.exit()
  
-class Enemy2(Sprite):
+class Enemy2(Sprite): # second enemy, slightly more complicated, charges at player and wanders around in different intervals
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.enemies
         Sprite.__init__(self, self.groups)
