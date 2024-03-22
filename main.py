@@ -31,6 +31,7 @@ class Game:
         pg.key.set_repeat(500, 100)
         self.load_data()
         self.clock = pg.time.Clock()
+        self.wave = 10000
 
     def draw_text(self, surface, text, size, color, x, y):
         font_name = pg.font.match_font('arial')
@@ -81,6 +82,8 @@ class Game:
                     Coin(self,col,row)
                 if tile == 'x':
                     Enemy2(self,col,row)
+                if tile == '2':
+                    WaitingEnemy(self,col,row)
         self.survtime = Timer(self)
 
     def run(self):
@@ -116,6 +119,9 @@ class Game:
     # updates pretty much everything
     def update(self):
         self.all_sprites.update()
+        if not self.wave > pg.time.get_ticks():
+                           
+            self.wave = pg.time.get_ticks() + 10000
         if not self.players == '<Group(0 sprites)>':
             self.survtime.ticking()
 

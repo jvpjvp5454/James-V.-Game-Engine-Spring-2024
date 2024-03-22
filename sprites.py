@@ -284,3 +284,60 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
                 self.vy = -500      
             self.speedcd = pg.time.get_ticks() + 500
             self.cd = pg.time.get_ticks() + 2000
+
+class WaitingEnemy(Sprite): # first enemy, simple directly navigates to player
+    # enemy init
+    def __init__(self, game, x, y):
+        self.gotime = pg.time.get_ticks() + 10000
+        Sprite.__init__(self, self.groups)
+        self.groups = game.all_sprites, game.enemies
+        self.game = game
+        self.image = game.enemy_image
+        #self.image.fill(RED)
+        self.rect = self.image.get_rect( )
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
+        self.vx, self.vy = 100, 100
+
+        
+
+    # checks for wall collision and redirects based on velocity
+    def collide_with_walls(self, dir):
+            if dir == 'x':
+                hits = pg.sprite.spritecollide(self, self.game.walls, False)
+                if hits:
+                    self.vx *= -1
+                    self.rect.x = self.x
+            if dir == 'y':
+                hits = pg.sprite.spritecollide(self, self.game.walls, False)
+                if hits:
+                    self.vy *= -1
+                    self.rect.y = self.y
+    # changes velocity based on position relative to player
+    def update(self):
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
+        
+        if self.rect.x < self.game.player.rect.x:
+            self.vx = 110
+        if self.rect.x > self.game.player.rect.x:
+            self.vx = -110    
+        if self.rect.y < self.game.player.rect.y:
+            self.vy = 110
+        if self.rect.y > self.game.player.rect.y:
+            self.vy = -110
+        self.rect.x = self.x
+        self.collide_with_walls('x')
+        self.rect.y = self.y
+        self.collide_with_walls('y')
+        self.collide_with_player('x')
+        self.collide_with_player('y')
+
+    # checks for player collision and ends game
+    def collide_with_player(self, dir):
+        hits = pg.sprite.spritecollide(self, self.game.players, True)
+        if hits:
+            self.currenttime = pg.time.get_ticks() / 1000
+            pg.quit()
+            print("You survived" + str(self.currenttime) + "seconds")
+            sys.exit()
