@@ -63,6 +63,7 @@ class Game:
         self.pwup = pg.sprite.Group()
         self.enemies = pg.sprite.Group()
         self.players = pg.sprite.Group()
+        self.wavedenemies = pg.sprite.Group()
         #self.player = Player(self, 10, 10)
         #for x in range(10, 20):
             #Wall(self, x, 5)
@@ -82,8 +83,8 @@ class Game:
                     Coin(self,col,row)
                 if tile == 'x':
                     Enemy2(self,col,row)
-                if tile == '2':
-                    WaitingEnemy(self,col,row)
+                # if tile == '2':
+                #     WaitingEnemy(self,col,row)
         self.survtime = Timer(self)
 
     def run(self):
@@ -119,9 +120,6 @@ class Game:
     # updates pretty much everything
     def update(self):
         self.all_sprites.update()
-        if not self.wave > pg.time.get_ticks():
-                           
-            self.wave = pg.time.get_ticks() + 10000
         if not self.players == '<Group(0 sprites)>':
             self.survtime.ticking()
 
@@ -136,6 +134,9 @@ class Game:
         self.draw_grid()
         self.draw_text(self.screen, str(self.survtime.current_time), 24, WHITE, WIDTH/2 - 32, 2)
         pg.display.flip()
+
+
+
 
 
 
