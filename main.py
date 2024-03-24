@@ -6,8 +6,8 @@
 # powerups (added, increases speed)
 # start screen (WIP)
 # add survival timer (added)
-# add waves increases
-# trying to make it so you can see ur time in pygame instead of console but idk howwsa
+# add waves (WIP)
+# trying to make it so you can see ur time in pygame instead of console but idk how
 
 import pygame as pg 
 from settings import *
@@ -123,12 +123,12 @@ class Game:
         if not self.players == '<Group(0 sprites)>':
             self.survtime.ticking()
 
-    def draw_grid(self):
+    def draw_grid(self): # draws the visual grid
         for x in range(0, WIDTH, TILESIZE):
             pg.draw.line(self.screen, LIGHTGRAY, (x, 0), (x, HEIGHT))
         for y in range(0, WIDTH, TILESIZE):
             pg.draw.line(self.screen, LIGHTGRAY, (0, y), (WIDTH, y))
-    def draw(self):
+    def draw(self): # draws timer sprites, and everything
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
         self.draw_grid()
@@ -142,7 +142,7 @@ class Game:
 
 
     
-
+# starts game
 g = Game()
 while True:
     g.new()

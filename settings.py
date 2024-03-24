@@ -17,5 +17,4 @@ WHITE = (254,254,254)
 BLACK = (0,0,0)
 TEXTCOLOR = (255, 255, 255)
 RED = (255,0,0)
-
-# test
+# all the settings here
