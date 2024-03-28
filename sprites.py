@@ -267,7 +267,7 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
         if hits:
             self.currenttime = pg.time.get_ticks() / 1000
             pg.quit()
-            print("You survived " + str(self.currenttime) + " seconds")
+            print("You survived " + str(self.currenttime) + "  seconds")
             sys.exit()
 
     # special charging script for second enemy
