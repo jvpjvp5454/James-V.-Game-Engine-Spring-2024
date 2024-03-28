@@ -142,7 +142,7 @@ class Game:
 
 
     
-# starts game
+# starts gamew
 g = Game()
 while True:
     g.new()
