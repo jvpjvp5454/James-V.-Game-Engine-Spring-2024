@@ -8,20 +8,46 @@ import pygame as pg
 from settings import *
 from pygame.sprite import Sprite
 import sys
+from os import path
 money = 0
 
+dir = path.dirname(__file__)
+img_dir = path.join(dir, 'images')
+SPRITESHEET = "theBell.png"
+
+game_folder = path.dirname(__file__)
+img_folder = path.join(game_folder, 'images')
+
+
+class Spritesheet:
+    def __init__(self, filename):
+        self.spritesheet = pg.image.load("theBell.png").convert()
+
+    def get_image(self, x, y, width, height):
+        image = pg.Surface((width, height))
+        image.blit(self.spritesheet, (0, 0), (x, y, width, height))
+        image = pg.transform.scale(image, (width * 4, height * 4))
+        return image
+ 
 
 class Player(Sprite): # sprite class, neccesary properties such as x and y
     def __init__(self, game, x, y):
         Sprite.__init__(self)
         self.game = game
+        self.load_images()
+        self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
         self.groups = game.all_sprites, game.players
         pg.sprite.Sprite.__init__(self, self.groups)
-        self.image = pg.Surface((TILESIZE, TILESIZE)) # sprite image?
+        self.image = self.standing_frames[0]
         self.image.fill(WHITE) # color
         self.x = x * TILESIZE# position x
         self.y = y * TILESIZE# position y
         self.rect = self.image.get_rect()
+        self.current_frame = 0
+        self.last_update = 0
+        self.material = True
+        self.walking = False
+        
         self.vx, self.vy = 0, 0
         self.moneybag = 0
 
@@ -62,6 +88,57 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
             PLAYER_SPEED = PLAYER_SPEED + 5
             print(PLAYER_SPEED)
 
+# class Player(Sprite): # sprite class, neccesary properties such as x and y # (Old player code, keeping just in case)
+#     def __init__(self, game, x, y):
+#         Sprite.__init__(self)
+#         self.game = game
+#         self.groups = game.all_sprites, game.players
+#         pg.sprite.Sprite.__init__(self, self.groups)
+#         self.image = pg.Surface((TILESIZE, TILESIZE)) # sprite image?
+#         self.image.fill(WHITE) # color
+#         self.x = x * TILESIZE# position x
+#         self.y = y * TILESIZE# position y
+#         self.rect = self.image.get_rect()
+#         self.vx, self.vy = 0, 0
+#         self.moneybag = 0
+
+#     def get_keys(self):
+#         self.vx, self.vy = 0, 0
+#     # kills coins and adds money
+#     def collide_with_group(self, group, kill):
+#         hits = pg.sprite.spritecollide(self, group, kill)
+#         if hits:
+#             if str(hits[0].__class__.__name__) == "Coin":
+#                 self.moneybag += 1
+#                 print(self.moneybag)
+#     # changes velcoity after hitting wall
+#     def collide_with_walls(self, dir):
+#         if dir == 'x':
+#             hits = pg.sprite.spritecollide(self, self.game.walls, False)
+#             if hits:
+#                 if self.vx > 0:
+#                     self.x = hits[0].rect.left - self.rect.width
+#                 if self.vx < 0:
+#                     self.x = hits[0].rect.right 
+#                 self.vx = 0
+#                 self.rect.x = self.x
+#         if dir == 'y':
+#             hits = pg.sprite.spritecollide(self,self.game.walls, False)
+#             if hits:
+#                 if self.vy > 0:
+#                     self.y = hits[0].rect.top - self.rect.height
+#                 if self.vy < 0:
+#                     self.y = hits[0].rect.bottom 
+#                 self.vy = 0
+#                 self.rect.y = self.y
+#     # increases speed and kills powerup
+#     def collide_with_powerup(self, dir):
+#         hits = pg.sprite.spritecollide(self, self.game.pwup, True)
+#         global PLAYER_SPEED
+#         if hits:
+#             PLAYER_SPEED = PLAYER_SPEED + 5
+#             print(PLAYER_SPEED)
+
 
 
     
@@ -74,38 +151,38 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         
           
 
-    # def move(self, dx = 0, dy = ):
-       # self.x += dx
-       # self.y += dy
-# detects key presses and changes velocity
-    def get_keys(self):
-        self.vx, self.vy = 0, 0
-        keys = pg.key.get_pressed()
-        if keys[pg.K_LEFT] or keys[pg.K_a]:
-            self.vx = -PLAYER_SPEED
-        if keys[pg.K_RIGHT] or keys[pg.K_d]:
-            self.vx = PLAYER_SPEED
-        if keys[pg.K_UP] or keys[pg.K_w]:
-            self.vy = -PLAYER_SPEED
-        if keys[pg.K_DOWN] or keys[pg.K_s]:
-            self.vy = PLAYER_SPEED
-        if self.vx != 0 and self.vy != 0:
-            self.vx *= 0.7071
-            self.vy *= 0.7071
+#     # def move(self, dx = 0, dy = ):
+#        # self.x += dx
+#        # self.y += dy
+# # detects key presses and changes velocity
+#     def get_keys(self):
+#         self.vx, self.vy = 0, 0
+#         keys = pg.key.get_pressed()
+#         if keys[pg.K_LEFT] or keys[pg.K_a]:
+#             self.vx = -PLAYER_SPEED
+#         if keys[pg.K_RIGHT] or keys[pg.K_d]:
+#             self.vx = PLAYER_SPEED
+#         if keys[pg.K_UP] or keys[pg.K_w]:
+#             self.vy = -PLAYER_SPEED
+#         if keys[pg.K_DOWN] or keys[pg.K_s]:
+#             self.vy = PLAYER_SPEED
+#         if self.vx != 0 and self.vy != 0:
+#             self.vx *= 0.7071
+#             self.vy *= 0.7071
 
-    def update(self):
-        #self.rect.x = self.x * TILESIZE
-        #self.rect.y = self.y * TILESIZE
-        self.x += self.vx * self.game.dt
-        self.y += self.vy * self.game.dt
-        self.get_keys()
-        self.rect.x = self.x
-        self.rect.y = self.y
-        self.collide_with_walls('x')
-        self.collide_with_walls('y')
-        self.collide_with_powerup('x')
-        self.collide_with_powerup('y')
-        self.collide_with_group(self.game.coins, True)
+#     def update(self):
+#         #self.rect.x = self.x * TILESIZE
+#         #self.rect.y = self.y * TILESIZE
+#         self.x += self.vx * self.game.dt
+#         self.y += self.vy * self.game.dt
+#         self.get_keys()
+#         self.rect.x = self.x
+#         self.rect.y = self.y
+#         self.collide_with_walls('x')
+#         self.collide_with_walls('y')
+#         self.collide_with_powerup('x')
+#         self.collide_with_powerup('y')
+#         self.collide_with_group(self.game.coins, True)
 
         # future collision
         
