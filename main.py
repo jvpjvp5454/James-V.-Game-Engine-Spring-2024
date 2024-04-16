@@ -9,6 +9,8 @@
 # add waves (WIP)
 # trying to make it so you can see ur time in pygame instead of console but idk how
 
+# Beta Goal: Randomly generated enemies, with varying rarities and difficulty; different every run
+
 import pygame as pg 
 from settings import *
 from random import randint

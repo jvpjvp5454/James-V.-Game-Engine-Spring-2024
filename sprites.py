@@ -21,7 +21,7 @@ img_folder = path.join(game_folder, 'images')
 
 class Spritesheet:
     def __init__(self, filename):
-        self.spritesheet = pg.image.load("theBell.png").convert()
+        self.spritesheet = pg.image.load(filename).convert()
 
     def get_image(self, x, y, width, height):
         image = pg.Surface((width, height))
