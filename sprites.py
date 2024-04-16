@@ -35,7 +35,7 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         Sprite.__init__(self)
         self.game = game
         self.load_images()
-        self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
+        self.spritesheet = Spritesheet(path.join(img_folder, SPRITESHEET))
         self.groups = game.all_sprites, game.players
         pg.sprite.Sprite.__init__(self, self.groups)
         self.image = self.standing_frames[0]
@@ -51,6 +51,20 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         self.vx, self.vy = 0, 0
         self.moneybag = 0
 
+    def load_images(self):
+        self.standing_frames = [self.spritesheet.get_image(0,0, 32, 32), 
+                                self.spritesheet.get_image(32,0, 32, 32)]
+        
+    def animate(self):
+        now = pg.time.get_ticks()
+        if now - self.last_update > 350:
+            self.last_update = now
+            self.current_frame = (self.current_frame + 1) % len(self.standing_frames)
+            bottom = self.rect.bottom
+            self.image = self.standing_frames[self.current_frame]
+            self.rect = self.image.get_rect()
+            self.rect.bottom = bottom
+    
     def get_keys(self):
         self.vx, self.vy = 0, 0
     # kills coins and adds money
@@ -170,23 +184,20 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
 #             self.vx *= 0.7071
 #             self.vy *= 0.7071
 
-#     def update(self):
-#         #self.rect.x = self.x * TILESIZE
-#         #self.rect.y = self.y * TILESIZE
-#         self.x += self.vx * self.game.dt
-#         self.y += self.vy * self.game.dt
-#         self.get_keys()
-#         self.rect.x = self.x
-#         self.rect.y = self.y
-#         self.collide_with_walls('x')
-#         self.collide_with_walls('y')
-#         self.collide_with_powerup('x')
-#         self.collide_with_powerup('y')
-#         self.collide_with_group(self.game.coins, True)
-
-        # future collision
-        
-
+    def update(self):
+        self.animate()
+        #self.rect.x = self.x * TILESIZE
+        #self.rect.y = self.y * TILESIZE
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
+        self.get_keys()
+        self.rect.x = self.x
+        self.rect.y = self.y
+        self.collide_with_walls('x')
+        self.collide_with_walls('y')
+        self.collide_with_powerup('x')
+        self.collide_with_powerup('y')
+        self.collide_with_group(self.game.coins, True)
 
 class Wall(Sprite): 
     def __init__(self, game, x, y,): # Wall class
