@@ -9,6 +9,7 @@
 # add waves (WIP)
 # trying to make it so you can see ur time in pygame instead of console but idk how
 
+
 # Beta Goal: Randomly generated enemies, with varying rarities and difficulty; different every run
 
 import pygame as pg 
@@ -42,8 +43,6 @@ class Game:
         text_rect = text_surface.get_rect()
         text_rect.topleft = (x,y)
         surface.blit(text_surface, text_rect)
-
-
 
     # loads saves
     def load_data(self):
@@ -100,7 +99,7 @@ class Game:
     # input
     def events(self):
         for event in pg.event.get():                                                                                   # Bruh
-                if event.type == pg.QUIT:
+                if event.type == pg.QUIT: 
                     self.quit()
                      
         # movement controls

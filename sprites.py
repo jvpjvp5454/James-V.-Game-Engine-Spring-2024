@@ -34,8 +34,9 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
     def __init__(self, game, x, y):
         Sprite.__init__(self)
         self.game = game
-        self.load_images()
+       
         self.spritesheet = Spritesheet(path.join(img_folder, SPRITESHEET))
+        self.load_images()
         self.groups = game.all_sprites, game.players
         pg.sprite.Sprite.__init__(self, self.groups)
         self.image = self.standing_frames[0]
