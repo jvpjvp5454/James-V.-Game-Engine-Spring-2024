@@ -6,11 +6,14 @@
 # powerups (added, increases speed)
 # start screen (WIP)
 # add survival timer (added)
-# add waves (WIP)
+
 # trying to make it so you can see ur time in pygame instead of console but idk how
 
 
-# Beta Goal: Randomly generated enemies, with varying rarities and difficulty; different every run
+# Beta Goal: Waves of enemies, or enemies that spawn after a certain amount of time
+
+# Future Goals
+# Randomly generated enemies, with varying rarities and difficulty; different every run
 
 import pygame as pg 
 from settings import *
