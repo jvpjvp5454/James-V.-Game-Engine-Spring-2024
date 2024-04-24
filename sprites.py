@@ -102,6 +102,40 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
             PLAYER_SPEED = PLAYER_SPEED + 5
             print(PLAYER_SPEED)
 
+    def move(self, dx, dy):
+       self.x += dx
+       self.y += dy
+# detects key presses and changes velocity
+    def get_keys(self):
+        self.vx, self.vy = 0, 0
+        keys = pg.key.get_pressed()
+        if keys[pg.K_LEFT] or keys[pg.K_a]:
+            self.vx = -PLAYER_SPEED
+        if keys[pg.K_RIGHT] or keys[pg.K_d]:
+            self.vx = PLAYER_SPEED
+        if keys[pg.K_UP] or keys[pg.K_w]:
+            self.vy = -PLAYER_SPEED
+        if keys[pg.K_DOWN] or keys[pg.K_s]:
+            self.vy = PLAYER_SPEED
+        if self.vx != 0 and self.vy != 0:
+            self.vx *= 0.7071
+            self.vy *= 0.7071
+
+    def update(self):
+        self.animate()
+        #self.rect.x = self.x * TILESIZE
+        #self.rect.y = self.y * TILESIZE
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
+        self.get_keys()
+        self.rect.x = self.x
+        self.rect.y = self.y
+        self.collide_with_walls('x')
+        self.collide_with_walls('y')
+        self.collide_with_powerup('x')
+        self.collide_with_powerup('y')
+        self.collide_with_group(self.game.coins, True)
+
 # class Player(Sprite): # sprite class, neccesary properties such as x and y # (Old player code, keeping just in case)
 #     def __init__(self, game, x, y):
 #         Sprite.__init__(self)
@@ -184,20 +218,7 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
 #             self.vx *= 0.7071
 #             self.vy *= 0.7071
 
-    def update(self):
-        self.animate()
-        #self.rect.x = self.x * TILESIZE
-        #self.rect.y = self.y * TILESIZE
-        self.x += self.vx * self.game.dt
-        self.y += self.vy * self.game.dt
-        self.get_keys()
-        self.rect.x = self.x
-        self.rect.y = self.y
-        self.collide_with_walls('x')
-        self.collide_with_walls('y')
-        self.collide_with_powerup('x')
-        self.collide_with_powerup('y')
-        self.collide_with_group(self.game.coins, True)
+
 
 class Wall(Sprite): 
     def __init__(self, game, x, y,): # Wall class
@@ -373,13 +394,13 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
             self.speedcd = pg.time.get_ticks() + 500
             self.cd = pg.time.get_ticks() + 2000
 
-class WaitingEnemy(Sprite): # Enemy that spawns periodically, broken
+class WaitingEnemy(Sprite): # Enemy that spawns periodically and randomly, broken
     # enemy init
     def __init__(self, game, x, y):
         self.e = pg.sprite.Group
         self.gotime = pg.time.get_ticks() + 10000
         Sprite.__init__(self, self.groups)
-        self.groups = game.all_sprites, game.enemies, game.wavedenemies, self.e
+        self.groups = game.all_sprites, game.enemies, game.wave_enemies, self.e
         self.game = game
         self.image = game.enemy_image
         #self.image.fill(RED)
@@ -422,7 +443,7 @@ class WaitingEnemy(Sprite): # Enemy that spawns periodically, broken
         self.collide_with_player('x')
         self.collide_with_player('y')
         if self.gotime < pg.time.get_ticks():
-            self.game.wavedenemies.add()
+            self.game.wave_enemies.add()
     # checks for player collision and ends game
     def collide_with_player(self, dir):
         hits = pg.sprite.spritecollide(self, self.game.players, True)
