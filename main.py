@@ -39,7 +39,7 @@ class Game:
         self.wave = 10000
         # code borrowed from Tyler
         self.player = None  
-        self.enemy_spawn_timer = 0
+        self.enemy_spawn_timer = pg.time.get_ticks() + 100
 
     def draw_text(self, surface, text, size, color, x, y):
         font_name = pg.font.match_font('arial')
@@ -90,7 +90,7 @@ class Game:
                 if tile == 'x':
                     Enemy2(self,col,row)
                 if tile == 'E':
-                    new_enemy = Enemy(self, col, row, self.screen.get_width(), self.screen.get_height())
+                    new_enemy = Enemy(self, col, row)
                     new_enemy.spawn(self.screen.get_width(), self.screen.get_height())
                 # if tile == '2':
                 #     WaitingEnemy(self,col,row)
@@ -112,23 +112,25 @@ class Game:
                      
     # code borrowed from Tyler
     def spawn_enemies(self):
+        
         for _ in range(12):
             col = random.randint(0, len(self.map_data[0]) - 1)  # Random column
             row = random.randint(0, len(self.map_data) - 1)     # Random row
-            if self.map_data[row][col] == '.':
-                Enemy(self, col, row, self.screen.get_width(), self.screen.get_height())
-
+            # if self.map_data == '.':
+            print("I spawned enemies!" "(Hopefully)")
+            Enemy(self, col, row)
+#self.screen.get_width(), self.screen.get_height())
         # movement controls
-                if event.type == pg.KEYDOWN:
-                    if event.type == pg.QUIT:
-                        self.quit()
+           # if event.type == pg.KEYDOWN:
+              #  if event.type == pg.QUIT:
+                #    self.quit()
                     # if event.key == pg.K_LEFT:
                     #     self.player.move(dx=-1)
                     # if event.key == pg.K_RIGHT:
                     #     self.player.move(dx=1)
                     # if event.key == pg.K_UP:
                     #     self.player.move(dy=-1)
-                    # if event.key == pg.K_DOWN:
+                    # if event.key == pg.K_DOWN:w
                     #     self.player.move(dy=1)
     # quits game
     def quit(self):
@@ -139,10 +141,9 @@ class Game:
         self.all_sprites.update()
         if not self.players == '<Group(0 sprites)>':
             self.survtime.ticking()
-        self.enemy_spawn_timer += self.dt
-        if self.enemy_spawn_timer > 100:
+        if self.enemy_spawn_timer < pg.time.get_ticks():
             self.spawn_enemies()
-            self.enemy_spawn_timer = 0
+            self.enemy_spawn_timer = pg.time.get_ticks() + 10000
 
     def draw_grid(self): # draws the visual grid
         for x in range(0, WIDTH, TILESIZE):
