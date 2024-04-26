@@ -11,10 +11,11 @@
 
 
 # Beta Goal: Waves of enemies, or enemies that spawn after a certain amount of time (added, kind of broken but functional)
-    # Also added hp, working on hp bar
+    # Also added hp
 
 # Future Goals
-# Randomly generated enemies, with varying rarities and difficulty; different every run
+# Randomly spawned enemies, with varying rarities and difficulty; different every run
+# More enemy types, maybe one that stuns player somehow?
 
 import pygame as pg 
 from settings import *
