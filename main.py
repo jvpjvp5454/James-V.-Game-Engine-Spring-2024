@@ -105,7 +105,7 @@ class Game:
             self.update()
             self.draw()
  
-    # input
+    # inputs
     def events(self):
         for event in pg.event.get():                                                                                   # Bruh
                 if event.type == pg.QUIT: 
@@ -113,7 +113,7 @@ class Game:
                      
     # code partially borrowed from Tyler
     def spawn_enemies(self):
-        for _ in range():
+        for _ in range(6):
             col = random.randint(1, len(self.map_data[0]) - 1)  # Random column
             row = random.randint(1, len(self.map_data) - 1)     # Random row
             # if self.map_data == '.':

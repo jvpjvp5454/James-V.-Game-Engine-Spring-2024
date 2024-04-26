@@ -48,6 +48,7 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         self.material = True
         self.walking = False
         self.hp = 100
+        self.dmgcd = 0
         
         self.vx, self.vy = 0, 0
         self.moneybag = 0
@@ -146,8 +147,9 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
 
     def collide_with_enemy(self, dir):
         hits = pg.sprite.spritecollide(self, self.game.enemies, False)
-        if hits:
+        if hits and not self.dmgcd > pg.time.get_ticks():
             self.hp = self.hp - 10
+            self.dmgcd = pg.time.get_ticks() + 200
             
 
 # class Player(Sprite): # sprite class, neccesary properties such as x and y # (Old player code, keeping just in case)
