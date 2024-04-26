@@ -35,11 +35,14 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         Sprite.__init__(self)
         self.game = game
         self.spritesheet = Spritesheet(path.join(img_folder, SPRITESHEET))
-        self.load_images() # This broke the whole game because it was in front of the self.spritesheet cpde
+
+        #self.load_images() # This broke the whole game because it was in front of the self.spritesheet 
         self.groups = game.all_sprites, game.players
         pg.sprite.Sprite.__init__(self, self.groups)
-        self.image = self.standing_frames[0]
-        self.image.fill(WHITE) # color
+        #self.image = 'theBell.png'
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        #self.standing_frames[0]
+        self.image.fill(ORANGE) # color
         self.x = x * TILESIZE# position x
         self.y = y * TILESIZE# position y
         self.rect = self.image.get_rect()
@@ -49,23 +52,23 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         self.walking = False
         self.hp = 100
         self.dmgcd = 0
-        
+        self.flickercd = 0
         self.vx, self.vy = 0, 0
         self.moneybag = 0
 
-    def load_images(self):
-        self.standing_frames = [self.spritesheet.get_image(0,0, 32, 32), 
-                                self.spritesheet.get_image(32,0, 32, 32)]
+    # def load_images(self):
+    #     self.standing_frames = [self.spritesheet.get_image(0,0, 32, 32), 
+    #                             self.spritesheet.get_image(32,0, 32, 32)]
         
-    def animate(self):
-        now = pg.time.get_ticks()
-        if now - self.last_update > 350:
-            self.last_update = now
-            self.current_frame = (self.current_frame + 1) % len(self.standing_frames)
-            bottom = self.rect.bottom
-            self.image = self.standing_frames[self.current_frame]
-            self.rect = self.image.get_rect()
-            self.rect.bottom = bottom
+    # def animate(self):
+    #     now = pg.time.get_ticks()
+    #     if now - self.last_update > 350:
+    #         self.last_update = now
+    #         self.current_frame = (self.current_frame + 1) % len(self.standing_frames)
+    #         bottom = self.rect.bottom
+    #         self.image = self.standing_frames[self.current_frame]
+    #         self.rect = self.image.get_rect()
+    #         self.rect.bottom = bottom
     
     def get_keys(self):
         self.vx, self.vy = 0, 0
@@ -124,7 +127,7 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
             self.vy *= 0.7071
 
     def update(self):
-        self.animate()
+        #self.animate()
         #self.rect.x = self.x * TILESIZE
         #self.rect.y = self.y * TILESIZE
         self.x += self.vx * self.game.dt
@@ -144,6 +147,13 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
             pg.quit()
             print("You survived" + str(self.currenttime) + "seconds")
             sys.exit()
+        if self.dmgcd > pg.time.get_ticks():
+            self.image.fill(RED)
+            if self.flickercd < pg.time.get_ticks():
+                self.image.fill(ORANGE) 
+                self.flickercd = 200 + pg.time.get_ticks()
+        else:
+            self.image.fill(ORANGE) 
 
     def collide_with_enemy(self, dir):
         hits = pg.sprite.spritecollide(self, self.game.enemies, False)

@@ -16,5 +16,6 @@ RCOLOR = (100,200,300)
 WHITE = (254,254,254)
 BLACK = (0,0,0)
 TEXTCOLOR = (255, 255, 255)
+ORANGE = (204, 153, 51)
 RED = (255,0,0)
 # all the settings here
