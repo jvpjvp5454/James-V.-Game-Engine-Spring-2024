@@ -47,6 +47,7 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         self.last_update = 0
         self.material = True
         self.walking = False
+        self.hp = 100
         
         self.vx, self.vy = 0, 0
         self.moneybag = 0
@@ -134,7 +135,20 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         self.collide_with_walls('y')
         self.collide_with_powerup('x')
         self.collide_with_powerup('y')
+        self.collide_with_enemy('x')
+        self.collide_with_enemy('y')
         self.collide_with_group(self.game.coins, True)
+        if self.hp < 1:
+            self.currenttime = pg.time.get_ticks() / 1000
+            pg.quit()
+            print("You survived" + str(self.currenttime) + "seconds")
+            sys.exit()
+
+    def collide_with_enemy(self, dir):
+        hits = pg.sprite.spritecollide(self, self.game.enemies, False)
+        if hits:
+            self.hp = self.hp - 10
+            
 
 # class Player(Sprite): # sprite class, neccesary properties such as x and y # (Old player code, keeping just in case)
 #     def __init__(self, game, x, y):
@@ -275,6 +289,8 @@ class Enemy(Sprite): # first enemy, simple directly navigates to player
         self.x = x * TILESIZE
         self.y = y * TILESIZE
         self.vx, self.vy = 100, 100
+        # self.player = Player
+        # self.player.rect  = Player.rect
 
     # checks for wall collision and redirects based on velocity
     def collide_with_walls(self, dir):
@@ -305,26 +321,18 @@ class Enemy(Sprite): # first enemy, simple directly navigates to player
         self.collide_with_walls('x')
         self.rect.y = self.y
         self.collide_with_walls('y')
-        self.collide_with_player('x')
-        self.collide_with_player('y')
     # code borrowed from Tyler
     def spawn(self, WIDTH, HEIGHT):
         # Rng position
         self.rect.x = random.randint(0, WIDTH - TILESIZE)
         self.rect.y = random.randint(0, HEIGHT - TILESIZE)
-        # Makes enemy not spawn on player
-        while self.game.player and self.rect.colliderect(self.game.player.rect):
-            self.rect.x = random.randint(0, WIDTH - TILESIZE)
-            self.rect.y = random.randint(0, HEIGHT - TILESIZE)
+        # Makes enemy not spawn on player. not working
+        #while self.player and self.rect.colliderect(self.player.rect):
+        self.rect.x = random.randint(0, WIDTH - TILESIZE)
+        self.rect.y = random.randint(0, HEIGHT - TILESIZE)
 
     # checks for player collision and ends game
-    def collide_with_player(self, dir):
-        hits = pg.sprite.spritecollide(self, self.game.players, True)
-        if hits:
-            self.currenttime = pg.time.get_ticks() / 1000
-            pg.quit()
-            print("You survived" + str(self.currenttime) + "seconds")
-            sys.exit()
+    
  
 class Enemy2(Sprite): # second enemy, slightly more complicated, charges at player and wanders around in different intervals
     def __init__(self, game, x, y):
@@ -363,9 +371,8 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
         self.charge_at_player()
         self.collide_with_walls('x')
         self.collide_with_walls('y')
-        self.collide_with_player('x')
-        self.collide_with_player('y')
         hits = pg.sprite.spritecollide(self, self.game.walls, False)
+        
         if self.speedcd < pg.time.get_ticks() and not hits:
             self.image = self.game.enemy_image  
             if self.vy == -500:
@@ -380,14 +387,6 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
 
 
 
-    # check collision and ends game
-    def collide_with_player(self, dir):
-        hits = pg.sprite.spritecollide(self, self.game.players, True)
-        if hits:
-            self.currenttime = pg.time.get_ticks() / 1000
-            pg.quit()
-            print("You survived " + str(self.currenttime) + "  seconds")
-            sys.exit()
 
     # special charging script for second enemy
     def charge_at_player(self):
@@ -450,19 +449,10 @@ class WaitingEnemy(Sprite): # Enemy that spawns periodically and randomly, broke
         self.collide_with_walls('x')
         self.rect.y = self.y
         self.collide_with_walls('y')
-        self.collide_with_player('x')
-        self.collide_with_player('y')
         # if self.gotime < pg.time.get_ticks():
         if self.gotime == 10000:
             self.add()
 
 
     # checks for player collision and ends game
-    def collide_with_player(self, dir):
-        hits = pg.sprite.spritecollide(self, self.game.players, True)
-        if hits:
-            self.currenttime = pg.time.get_ticks() / 1000
-            pg.quit()
-            print("You survived" + str(self.currenttime) + "seconds")
-            sys.exit()
 

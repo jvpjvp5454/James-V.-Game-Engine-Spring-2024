@@ -10,7 +10,8 @@
 # trying to make it so you can see ur time in pygame instead of console but idk how
 
 
-# Beta Goal: Waves of enemies, or enemies that spawn after a certain amount of time
+# Beta Goal: Waves of enemies, or enemies that spawn after a certain amount of time (added, kind of broken but functional)
+    # Also added hp, working on hp bar
 
 # Future Goals
 # Randomly generated enemies, with varying rarities and difficulty; different every run
@@ -39,8 +40,8 @@ class Game:
         self.wave = 10000
         # code borrowed from Tyler
         self.player = None  
-        self.enemy_spawn_timer = pg.time.get_ticks() + 100
-
+        self.enemy_spawn_timer = pg.time.get_ticks() + 10000
+        print(len(self.map_data))
     def draw_text(self, surface, text, size, color, x, y):
         font_name = pg.font.match_font('arial')
         font = pg.font.Font(font_name, size)
@@ -110,12 +111,11 @@ class Game:
                 if event.type == pg.QUIT: 
                     self.quit()
                      
-    # code borrowed from Tyler
+    # code partially borrowed from Tyler
     def spawn_enemies(self):
-        
-        for _ in range(12):
-            col = random.randint(0, len(self.map_data[0]) - 1)  # Random column
-            row = random.randint(0, len(self.map_data) - 1)     # Random row
+        for _ in range():
+            col = random.randint(1, len(self.map_data[0]) - 1)  # Random column
+            row = random.randint(1, len(self.map_data) - 1)     # Random row
             # if self.map_data == '.':
             print("I spawned enemies!" "(Hopefully)")
             Enemy(self, col, row)
