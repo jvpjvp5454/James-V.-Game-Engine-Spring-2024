@@ -36,8 +36,10 @@ class Game:
         self.running = True
         pg.key.set_repeat(500, 100)
         self.load_data()
-        self.clock = pg.time.Clock()
         self.wave = 10000
+        # code borrowed from Tyler
+        self.player = None  
+        self.enemy_spawn_timer = 0
 
     def draw_text(self, surface, text, size, color, x, y):
         font_name = pg.font.match_font('arial')
@@ -87,6 +89,9 @@ class Game:
                     Coin(self,col,row)
                 if tile == 'x':
                     Enemy2(self,col,row)
+                if tile == 'E':
+                    new_enemy = Enemy(self, col, row, self.screen.get_width(), self.screen.get_height())
+                    new_enemy.spawn(self.screen.get_width(), self.screen.get_height())
                 # if tile == '2':
                 #     WaitingEnemy(self,col,row)
         self.survtime = Timer(self)
@@ -105,6 +110,14 @@ class Game:
                 if event.type == pg.QUIT: 
                     self.quit()
                      
+    # code borrowed from Tyler
+    def spawn_enemies(self):
+        for _ in range(12):
+            col = random.randint(0, len(self.map_data[0]) - 1)  # Random column
+            row = random.randint(0, len(self.map_data) - 1)     # Random row
+            if self.map_data[row][col] == '.':
+                Enemy(self, col, row, self.screen.get_width(), self.screen.get_height())
+
         # movement controls
                 if event.type == pg.KEYDOWN:
                     if event.type == pg.QUIT:
@@ -126,6 +139,10 @@ class Game:
         self.all_sprites.update()
         if not self.players == '<Group(0 sprites)>':
             self.survtime.ticking()
+        self.enemy_spawn_timer += self.dt
+        if self.enemy_spawn_timer > 100:
+            self.spawn_enemies()
+            self.enemy_spawn_timer = 0
 
     def draw_grid(self): # draws the visual grid
         for x in range(0, WIDTH, TILESIZE):

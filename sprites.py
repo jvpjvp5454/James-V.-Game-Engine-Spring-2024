@@ -26,7 +26,7 @@ class Spritesheet:
     def get_image(self, x, y, width, height):
         image = pg.Surface((width, height))
         image.blit(self.spritesheet, (0, 0), (x, y, width, height))
-        image = pg.transform.scale(image, (width * 4, height * 4))
+        image = pg.transform.scale(image, (width * 1, height * 1))
         return image
  
 
@@ -265,6 +265,7 @@ class Coin(Sprite): #coin class
 class Enemy(Sprite): # first enemy, simple directly navigates to player
     # enemy init
     def __init__(self, game, x, y):
+        self.spawn
         self.groups = game.all_sprites, game.enemies
         Sprite.__init__(self, self.groups)
         self.game = game
@@ -306,6 +307,15 @@ class Enemy(Sprite): # first enemy, simple directly navigates to player
         self.collide_with_walls('y')
         self.collide_with_player('x')
         self.collide_with_player('y')
+    # code borrowed from Tyler
+    def spawn(self, WIDTH, HEIGHT):
+        # Rng position
+        self.rect.x = random.randint(0, WIDTH - TILESIZE)
+        self.rect.y = random.randint(0, HEIGHT - TILESIZE)
+        # Makes enemy not spawn on player
+        while self.game.player and self.rect.colliderect(self.game.player.rect):
+            self.rect.x = random.randint(0, WIDTH - TILESIZE)
+            self.rect.y = random.randint(0, HEIGHT - TILESIZE)
 
     # checks for player collision and ends game
     def collide_with_player(self, dir):
@@ -442,8 +452,11 @@ class WaitingEnemy(Sprite): # Enemy that spawns periodically and randomly, broke
         self.collide_with_walls('y')
         self.collide_with_player('x')
         self.collide_with_player('y')
-        if self.gotime < pg.time.get_ticks():
-            self.game.wave_enemies.add()
+        # if self.gotime < pg.time.get_ticks():
+        if self.gotime == 10000:
+            self.add()
+
+
     # checks for player collision and ends game
     def collide_with_player(self, dir):
         hits = pg.sprite.spritecollide(self, self.game.players, True)
@@ -452,3 +465,4 @@ class WaitingEnemy(Sprite): # Enemy that spawns periodically and randomly, broke
             pg.quit()
             print("You survived" + str(self.currenttime) + "seconds")
             sys.exit()
+
