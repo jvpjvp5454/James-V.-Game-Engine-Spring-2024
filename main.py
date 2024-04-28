@@ -10,8 +10,8 @@
 # trying to make it so you can see ur time in pygame instead of console but idk how
 
 
-# Beta Goal: Waves of enemies, or enemies that spawn after a certain amount of time (added, kind of broken but functional)
-    # Also added hp
+# Beta Goal: Waves of enemies, or enemies that spawn after a certain amount of time (added, need to fix enemies spawning in walls but functional)
+    # Also added hp and indicator when you are damaged
 
 # Future Goals
 # Randomly spawned enemies, with varying rarities and difficulty; different every run
