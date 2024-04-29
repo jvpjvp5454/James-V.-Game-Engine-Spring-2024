@@ -13,8 +13,11 @@
 # Beta Goal: Waves of enemies, or enemies that spawn after a certain amount of time (added, need to fix enemies spawning in walls but functional)
     # Also added hp and indicator when you are damaged
 
+# Final Project Goal:
+    # Boss enemy that spawns after a certain amount of time, maybe to kill it you have to get charging enemies to ram into it (dodging mechanic?), powerup/materials that allows player to build a wall per powerup
+
 # Future Goals
-# Randomly spawned enemies, with varying rarities and difficulty; different every run
+# Enemies with varying rarities and difficulty; different every run
 # More enemy types, maybe one that stuns player somehow?
 
 import pygame as pg 
@@ -41,7 +44,7 @@ class Game:
         self.wave = 10000
         # code borrowed from Tyler
         self.player = None  
-        self.enemy_spawn_timer = pg.time.get_ticks() + 10000
+        self.wave_timer = pg.time.get_ticks() + 10000
         print(len(self.map_data))
     def draw_text(self, surface, text, size, color, x, y):
         font_name = pg.font.match_font('arial')
@@ -115,11 +118,21 @@ class Game:
     # code partially borrowed from Tyler
     def spawn_enemies(self):
         for _ in range(6):
-            col = random.randint(1, len(self.map_data[0]) - 1)  # Random column
-            row = random.randint(1, len(self.map_data) - 1)     # Random row
+            # col = random.randint(1, len(self.map_data[0]) - 1)  # Random column
+            # row = random.randint(1, len(self.map_data) - 1)     # Random row
             # if self.map_data == '.':
-            print("I spawned enemies!" "(Hopefully)")
-            Enemy(self, col, row)
+            # print("I spawned enemies!" "(Hopefully)")
+            x = random.randint(0,32 - 1)
+            y = random.randint(0,24 - 1)
+            Enemy(self, x, y)
+
+    def spawn_powerups(self):
+        for _ in range(6):
+            x = random.randint(0,32 - 1)
+            y = random.randint(0,24 - 1)
+            Powerup(self, x, y)
+
+            #Enemy(self, col, row)
 #self.screen.get_width(), self.screen.get_height())
         # movement controls
            # if event.type == pg.KEYDOWN:
@@ -140,10 +153,10 @@ class Game:
     # updates pretty much everything
     def update(self):
         self.all_sprites.update()
-        if not self.players == '<Group(0 sprites)>':
-            self.survtime.ticking()
-        if self.enemy_spawn_timer < pg.time.get_ticks():
+        self.survtime.ticking()
+        if self.wave_timer < pg.time.get_ticks():
             self.spawn_enemies()
+            self.spawn_powerups()
             self.enemy_spawn_timer = pg.time.get_ticks() + 10000
 
     def draw_grid(self): # draws the visual grid
