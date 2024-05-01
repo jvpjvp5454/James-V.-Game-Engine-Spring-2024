@@ -30,7 +30,6 @@ from images import *
 from math import floor
 from util import *
 
-
 class Game:
     # Initialization and running the game
     def __init__(self):
@@ -76,7 +75,6 @@ class Game:
         self.enemies = pg.sprite.Group()
         self.players = pg.sprite.Group()
         self.wave_enemies = pg.sprite.Group()
-        self.freezepwup = pg.sprite.Group()
         #self.player = Player(self, 10, 10)
         #for x in range(10, 20):
             #Wall(self, x, 5)
@@ -99,8 +97,6 @@ class Game:
                 if tile == 'E':
                     new_enemy = Enemy(self, col, row)
                     new_enemy.spawn(self.screen.get_width(), self.screen.get_height())
-                if tile == 'i':
-                    new_enemy = PowerUpFreeze(self, col, row)
                 # if tile == '2':
                 #     WaitingEnemy(self,col,row)
         self.survtime = Timer(self)
@@ -112,23 +108,6 @@ class Game:
             self.events()
             self.update()
             self.draw()
-            self.events()
-
-    def events(self):
-    # Game loop - events.
-        for event in pg.event.get():
-            # Process input (events)
-            if event.type == pg.QUIT:
-                self.quit()
-            if event.type == pg.USEREVENT + 1:  # If the timer event is triggered
-                for enemy in self.enemies:  # Assuming you have a list of enemies
-                    if enemy.frozen:
-                        enemy.unfreeze()
-                    if Enemy2.frozen:
-                        Enemy2.unfreeze
-
-
-
  
     # inputs
     def events(self):
@@ -176,13 +155,10 @@ class Game:
         self.all_sprites.update()
         self.survtime.ticking()
         if self.wave_timer < pg.time.get_ticks():
+            self.wave_timer = pg.time.get_ticks() + 10000
             self.spawn_enemies()
             self.spawn_powerups()
-            self.enemy_spawn_timer = pg.time.get_ticks() + 10000
-       # if self.events.type == pg.USEREVENT + 1:  # If the timer event is triggered
-       #     for enemy in self.enemies:  # Assuming you have a list of enemies
-           #     if enemy.frozen:
-            #        enemy.unfreeze()
+          
 
     def draw_grid(self): # draws the visual grid
         for x in range(0, WIDTH, TILESIZE):

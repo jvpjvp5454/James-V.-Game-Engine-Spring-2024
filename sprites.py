@@ -253,17 +253,17 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
 #             self.vy *= 0.7071
 
 
-class PowerUpFreeze(Sprite):
-    def __init__(self, game, x, y):
-        Sprite.__init__(self)
-        self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))  # Replace with actual image
-        self.image.fill(RED)  # Replace with actual color
-        self.rect = self.image.get_rect()
-        self.x = x * TILESIZE
-        self.y = y * TILESIZE
-        self.rect.x = self.x
-        self.rect.y = self.y
+#class PowerUpFreeze(Sprite):
+  #  def __init__(self, game, x, y):
+     #   Sprite.__init__(self)
+      #  self.game = game
+      #  self.image = pg.Surface((TILESIZE, TILESIZE))  # Replace with actual image
+       # self.image.fill(RED)  # Replace with actual color
+      #  self.rect = self.image.get_rect()
+      #  self.x = x * TILESIZE
+      #  self.y = y * TILESIZE
+      #  self.rect.x = self.x
+       # self.rect.y = self.y
 
 
 class Wall(Sprite): 
