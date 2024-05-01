@@ -107,6 +107,14 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
             PLAYER_SPEED = PLAYER_SPEED + 5
             print(PLAYER_SPEED)
 
+    def collide_with_powerupfreeze(self, dir):
+        hits = pg.sprite.spritecollide(self, self.game.freezepwup, True)
+        if hits:
+            self.game.enemies.old_vx, self.game.enemies.old_vy = self.game.enemies.vx, self.game.enemies.vy  # Store old velocity
+            self.game.enemies.freeze()
+           
+    
+
     def move(self, dx, dy):
        self.x += dx
        self.y += dy
@@ -245,6 +253,18 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
 #             self.vy *= 0.7071
 
 
+class PowerUpFreeze(Sprite):
+    def __init__(self, game, x, y):
+        Sprite.__init__(self)
+        self.game = game
+        self.image = pg.Surface((TILESIZE, TILESIZE))  # Replace with actual image
+        self.image.fill(RED)  # Replace with actual color
+        self.rect = self.image.get_rect()
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
+        self.rect.x = self.x
+        self.rect.y = self.y
+
 
 class Wall(Sprite): 
     def __init__(self, game, x, y,): # Wall class
@@ -304,6 +324,17 @@ class Enemy(Sprite): # first enemy, simple directly navigates to player
         # self.player = Player
         # self.player.rect  = Player.rect
 
+    def freeze(self):
+        #Freeze the enemy in place
+        self.vx, self.vy = 0, 0  # Stop moving
+        pg.time.set_timer(pg.USEREVENT + 1, 3000)  # Set a timer for 3 seconds
+
+    def unfreeze(self):
+        #Unfreeze the enemy
+        self.vx, self.vy = self.old_vx, self.old_vy  # Restore old velocity
+        self.frozen = False
+
+
     # checks for wall collision and redirects based on velocity
     def collide_with_walls(self, dir):
             if dir == 'x':
@@ -342,6 +373,8 @@ class Enemy(Sprite): # first enemy, simple directly navigates to player
         #while self.player and self.rect.colliderect(self.player.rect):
         self.rect.x = random.randint(0, WIDTH - TILESIZE)
         self.rect.y = random.randint(0, HEIGHT - TILESIZE)
+
+
 
     # checks for player collision and ends game
     
@@ -397,7 +430,15 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
                 self.vx = 100
 
 
+    def freeze(self):
+        #Freeze the enemy in place
+        self.vx, self.vy = 0, 0  # Stop moving
+        pg.time.set_timer(pg.USEREVENT + 1, 3000)  # Set a timer for 3 seconds
 
+    def unfreeze(self):
+        #unfreeze the enemy#
+        self.vx, self.vy = self.old_vx, self.old_vy  # Restore old velocity
+        self.frozen = False
 
 
     # special charging script for second enemy
@@ -415,56 +456,56 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
             self.speedcd = pg.time.get_ticks() + 500
             self.cd = pg.time.get_ticks() + 2000
 
-class WaitingEnemy(Sprite): # Enemy that spawns periodically and randomly, broken
-    # enemy init
-    def __init__(self, game, x, y):
-        self.e = pg.sprite.Group
-        self.gotime = pg.time.get_ticks() + 10000
-        Sprite.__init__(self, self.groups)
-        self.groups = game.all_sprites, game.enemies, game.wave_enemies, self.e
-        self.game = game
-        self.image = game.enemy_image
-        #self.image.fill(RED)
-        self.rect = self.image.get_rect( )
-        self.x = x * TILESIZE
-        self.y = y * TILESIZE
-        self.vx, self.vy = 100, 100
+# class WaitingEnemy(Sprite): # Enemy that spawns periodically and randomly, broken
+#     # enemy init
+#     def __init__(self, game, x, y):
+#         self.e = pg.sprite.Group
+#         self.gotime = pg.time.get_ticks() + 10000
+#         Sprite.__init__(self, self.groups)
+#         self.groups = game.all_sprites, game.enemies, game.wave_enemies, self.e
+#         self.game = game
+#         self.image = game.enemy_image
+#         #self.image.fill(RED)
+#         self.rect = self.image.get_rect( )
+#         self.x = x * TILESIZE
+#         self.y = y * TILESIZE
+#         self.vx, self.vy = 100, 100
 
         
 
-    # checks for wall collision and redirects based on velocity
-    def collide_with_walls(self, dir):
-            if dir == 'x':
-                hits = pg.sprite.spritecollide(self, self.game.walls, False)
-                if hits:
-                    self.vx *= -1
-                    self.rect.x = self.x
-            if dir == 'y':
-                hits = pg.sprite.spritecollide(self, self.game.walls, False)
-                if hits:
-                    self.vy *= -1
-                    self.rect.y = self.y
-    # changes velocity based on position relative to player
-    def update(self):
-        self.x += self.vx * self.game.dt
-        self.y += self.vy * self.game.dt
+#     # checks for wall collision and redirects based on velocity
+#     def collide_with_walls(self, dir):
+#             if dir == 'x':
+#                 hits = pg.sprite.spritecollide(self, self.game.walls, False)
+#                 if hits:
+#                     self.vx *= -1
+#                     self.rect.x = self.x
+#             if dir == 'y':
+#                 hits = pg.sprite.spritecollide(self, self.game.walls, False)
+#                 if hits:
+#                     self.vy *= -1
+#                     self.rect.y = self.y
+#     # changes velocity based on position relative to player
+#     def update(self):
+#         self.x += self.vx * self.game.dt
+#         self.y += self.vy * self.game.dt
         
-        if self.rect.x < self.game.player.rect.x:
-            self.vx = 110
-        if self.rect.x > self.game.player.rect.x:
-            self.vx = -110    
-        if self.rect.y < self.game.player.rect.y:
-            self.vy = 110
-        if self.rect.y > self.game.player.rect.y:
-            self.vy = -110
-        self.rect.x = self.x
-        self.collide_with_walls('x')
-        self.rect.y = self.y
-        self.collide_with_walls('y')
-        # if self.gotime < pg.time.get_ticks():
-        if self.gotime == 10000:
-            self.add()
+#         if self.rect.x < self.game.player.rect.x:
+#             self.vx = 110
+#         if self.rect.x > self.game.player.rect.x:
+#             self.vx = -110    
+#         if self.rect.y < self.game.player.rect.y:
+#             self.vy = 110
+#         if self.rect.y > self.game.player.rect.y:
+#             self.vy = -110
+#         self.rect.x = self.x
+#         self.collide_with_walls('x')
+#         self.rect.y = self.y
+#         self.collide_with_walls('y')
+#         # if self.gotime < pg.time.get_ticks():
+#         if self.gotime == 10000:
+#             self.add()
 
 
-    # checks for player collision and ends game
+#     # checks for player collision and ends game
 
