@@ -1,5 +1,6 @@
 # This file was created by James von Ploennies
 
+print("This is the sprites script. To launch the game, run main.py.")
 
 from images import *
 import time
@@ -130,6 +131,16 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
             self.vy = -PLAYER_SPEED
         if keys[pg.K_DOWN] or keys[pg.K_s]:
             self.vy = PLAYER_SPEED
+        if keys[pg.K_SPACE]:
+            if self.vy > 0:
+                self.y = self.y + 20
+            if self.vx > 0:
+                self.x = self.x + 20
+            if self.vy < 0:
+                self.y = self.y - 20
+            if self.vx < 0:
+                self.x = self.x - 20
+
         if self.vx != 0 and self.vy != 0:
             self.vx *= 0.7071
             self.vy *= 0.7071
@@ -308,10 +319,10 @@ class Coin(Sprite): #coin class
         self.rect.y = y * TILESIZE
         self.vs, self.vy = 0, 0
 
-class Enemy(Sprite): # first enemy, simple directly navigates to player
+class Enemy(Sprite): # first enemy, simply directly navigates to player
     # enemy init
     def __init__(self, game, x, y):
-        self.spawn
+        #self.spawn
         self.groups = game.all_sprites, game.enemies
         Sprite.__init__(self, self.groups)
         self.game = game
@@ -324,15 +335,15 @@ class Enemy(Sprite): # first enemy, simple directly navigates to player
         # self.player = Player
         # self.player.rect  = Player.rect
 
-    def freeze(self):
-        #Freeze the enemy in place
-        self.vx, self.vy = 0, 0  # Stop moving
-        pg.time.set_timer(pg.USEREVENT + 1, 3000)  # Set a timer for 3 seconds
+    # def freeze(self):
+    #     #Freeze the enemy in place
+    #     self.vx, self.vy = 0, 0  # Stop moving
+    #     pg.time.set_timer(pg.USEREVENT + 1, 3000)  # Set a timer for 3 seconds
 
-    def unfreeze(self):
-        #Unfreeze the enemy
-        self.vx, self.vy = self.old_vx, self.old_vy  # Restore old velocity
-        self.frozen = False
+    # def unfreeze(self):
+    #     #Unfreeze the enemy
+    #     self.vx, self.vy = self.old_vx, self.old_vy  # Restore old velocity
+    #     self.frozen = False
 
 
     # checks for wall collision and redirects based on velocity
@@ -364,17 +375,7 @@ class Enemy(Sprite): # first enemy, simple directly navigates to player
         self.collide_with_walls('x')
         self.rect.y = self.y
         self.collide_with_walls('y')
-    # code borrowed from Tyler
-    def spawn(self, WIDTH, HEIGHT):
-        # Rng position
-        self.rect.x = random.randint(0, WIDTH - TILESIZE)
-        self.rect.y = random.randint(0, HEIGHT - TILESIZE)
-        # Makes enemy not spawn on player. not working
-        #while self.player and self.rect.colliderect(self.player.rect):
-        self.rect.x = random.randint(0, WIDTH - TILESIZE)
-        self.rect.y = random.randint(0, HEIGHT - TILESIZE)
-
-
+   
 
     # checks for player collision and ends game
     
@@ -430,15 +431,15 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
                 self.vx = 100
 
 
-    def freeze(self):
-        #Freeze the enemy in place
-        self.vx, self.vy = 0, 0  # Stop moving
-        pg.time.set_timer(pg.USEREVENT + 1, 3000)  # Set a timer for 3 seconds
+    # def freeze(self):
+    #     #Freeze the enemy in place
+    #     self.vx, self.vy = 0, 0  # Stop moving
+    #     pg.time.set_timer(pg.USEREVENT + 1, 3000)  # Set a timer for 3 seconds
 
-    def unfreeze(self):
-        #unfreeze the enemy#
-        self.vx, self.vy = self.old_vx, self.old_vy  # Restore old velocity
-        self.frozen = False
+    # def unfreeze(self):
+    #     #unfreeze the enemy#
+    #     self.vx, self.vy = self.old_vx, self.old_vy  # Restore old velocity
+    #     self.frozen = False
 
 
     # special charging script for second enemy
@@ -455,6 +456,101 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
                 self.vy = -500      
             self.speedcd = pg.time.get_ticks() + 500
             self.cd = pg.time.get_ticks() + 2000
+
+
+
+# Boss enemy class, not implemented
+
+class EnemyBoss(Sprite): # second enemy, slightly more complicated, charges at player and wanders around in different intervals
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.enemies
+        Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = game.enemy_image
+        #self.image.fill(RED)
+        self.rect = self.image.get_rect()
+        self.x = x * TILESIZE * 1.5
+        self.y = y * TILESIZE * 1.5
+        self.vx, self.vy = 500, 500
+        self.cd = 0
+        self.speedcd = 0
+        self.hp = 1000
+        
+
+    def collide_with_enemy2(self, dir):
+        hits = pg.sprite.spritecollide(self, self.game.enemies, False)
+        if hits and not self.dmgcd > pg.time.get_ticks():
+            self.hp = self.hp - 50
+            self.dmgcd = pg.time.get_ticks() + 200
+    
+    def collide_with_walls(self, dir):
+        if dir == 'x':
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                self.vx *= -1
+                self.rect.x = self.x
+
+        if dir == 'y':
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                self.vy *= -1
+                self.rect.y = self.y
+
+    # same as previous but with increased speed
+    def update(self):
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt 
+        self.rect.x = self.x
+        self.rect.y = self.y
+        self.charge_at_player()
+        self.collide_with_walls('x')
+        self.collide_with_walls('y')
+        self.collide_with_enemy2('x')
+        self.collide_with_enemy2('y')
+        hits = pg.sprite.spritecollide(self, self.game.walls, False)
+        
+        if self.speedcd < pg.time.get_ticks() and not hits:
+            self.image = self.game.enemy_image  
+            if self.vy == -500:
+                self.vy = -100
+            if self.vy == 500:
+                self.vy = 100
+            if self.vx == -500:
+                self.vx = -100
+            if self.vx == 500:
+                self.vx = 100
+
+
+    # def freeze(self):
+    #     #Freeze the enemy in place
+    #     self.vx, self.vy = 0, 0  # Stop moving
+    #     pg.time.set_timer(pg.USEREVENT + 1, 3000)  # Set a timer for 3 seconds
+
+    # def unfreeze(self):
+    #     #unfreeze the enemy#
+    #     self.vx, self.vy = self.old_vx, self.old_vy  # Restore old velocity
+    #     self.frozen = False
+
+    # special charging script for second enemy
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # class WaitingEnemy(Sprite): # Enemy that spawns periodically and randomly, broken
 #     # enemy init

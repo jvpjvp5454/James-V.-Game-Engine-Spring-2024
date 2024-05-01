@@ -96,8 +96,8 @@ class Game:
                     Enemy2(self,col,row)
                 if tile == 'E':
                     new_enemy = Enemy(self, col, row)
-                    new_enemy.spawn(self.screen.get_width(), self.screen.get_height())
-                # if tile == '2':
+                    # new_enemy.spawn(self.screen.get_width(), self.screen.get_height())
+                # if tile == '2': 
                 #     WaitingEnemy(self,col,row)
         self.survtime = Timer(self)
 
