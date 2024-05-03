@@ -43,9 +43,11 @@ class Game:
         self.load_data()
         self.wave = 10000
         # code borrowed from Tyler
-        self.player = None  
+        self.player = Player
         self.wave_timer = pg.time.get_ticks() + 10000
         print(len(self.map_data))
+        self.wave = 0
+
     def draw_text(self, surface, text, size, color, x, y):
         font_name = pg.font.match_font('arial')
         font = pg.font.Font(font_name, size)
@@ -63,8 +65,8 @@ class Game:
             for line in f:
                 self.map_data.append(line)
 
-        self.enemy_image = pg.image.load(path.join(images, 'chihuahua.jpg')).convert_alpha()
-        self.enemy_image2 = pg.image.load(path.join(images, 'angerchihuahua.jpg')).convert_alpha()
+        self.enemy_image = pg.image.load(path.join(images, 'yellowtri.png')).convert_alpha()
+        self.enemy_image2 = pg.image.load(path.join(images, 'redtri.png')).convert_alpha()
 
     def new(self):
         # start all vars setup groups and instantiate classes
@@ -97,7 +99,7 @@ class Game:
                 if tile == 'E':
                     new_enemy = Enemy(self, col, row)
                     # new_enemy.spawn(self.screen.get_width(), self.screen.get_height())
-                # if tile == '2': 
+                # if tile == '2':
                 #     WaitingEnemy(self,col,row)
         self.survtime = Timer(self)
 
@@ -117,14 +119,21 @@ class Game:
                      
     # code partially borrowed from Tyler
     def spawn_enemies(self):
-        for _ in range(6):
+        for _ in range(2):
             # col = random.randint(1, len(self.map_data[0]) - 1)  # Random column
             # row = random.randint(1, len(self.map_data) - 1)     # Random row
             # if self.map_data == '.':
             # print("I spawned enemies!" "(Hopefully)")
-            x = random.randint(0,32 - 1)
-            y = random.randint(0,24 - 1)
+            x = random.randint(2,30)
+            y = random.randint(2,22)
             Enemy(self, x, y)
+
+    def spawn_chargers(self):
+        for _ in range(1):
+            x = random.randint(2,30)
+            y = random.randint(2,22)
+            Enemy2(self, x, y)
+
 
     def spawn_powerups(self):
         for _ in range(6):
@@ -156,8 +165,20 @@ class Game:
         self.survtime.ticking()
         if self.wave_timer < pg.time.get_ticks():
             self.wave_timer = pg.time.get_ticks() + 10000
-            self.spawn_enemies()
+            if not self.wave > 5:  
+                self.spawn_enemies()
             self.spawn_powerups()
+            self.spawn_chargers()
+            self.wave += 1
+            if self.wave == 6:
+                self.spawn_boss()
+
+
+    def spawn_boss(self):
+        for _ in range(1):
+            x = random.randint(2,30)
+            y = random.randint(2,22)
+            EnemyBoss(self, x, y)
           
 
     def draw_grid(self): # draws the visual grid
