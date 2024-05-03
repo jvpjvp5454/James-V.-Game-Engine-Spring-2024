@@ -437,13 +437,13 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
         hits = pg.sprite.spritecollide(self, self.game.walls, False)
         if self.speedcd < pg.time.get_ticks() and not hits:
             self.image = self.game.enemy_image  
-            if self.vy == -500:
+            if self.vy == -400:
                 self.vy = -100
-            if self.vy == 500:
+            if self.vy == 400:
                 self.vy = 100
-            if self.vx == -500:
+            if self.vx == -400:
                 self.vx = -100
-            if self.vx == 500:
+            if self.vx == 400:
                 self.vx = 100
          # Source: Github copilot  
         if not self.spincd > pg.time.get_ticks():
@@ -492,16 +492,8 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
             if self.rect.y > self.game.player.rect.y:
                 self.vy = -400
 
-            if self.rect.x < self.game.player.rect.x:
-                self.vx = 400
-            if self.rect.x > self.game.player.rect.x:
-                self.vx = -400
-            if self.rect.y < self.game.player.rect.y:
-                self.vy = 400
-            if self.rect.y > self.game.player.rect.y:
-                self.vy = -400 
-            self.speedcd = pg.time.get_ticks() + 500
-            self.cd = pg.time.get_ticks() + 2000
+            self.speedcd = pg.time.get_ticks() + 2000
+            self.cd = pg.time.get_ticks() + 4000
 
 
 
