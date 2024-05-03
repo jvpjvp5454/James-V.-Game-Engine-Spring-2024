@@ -345,6 +345,7 @@ class Enemy(Sprite): # first enemy, simply directly navigates to player
         self.rect = self.image.get_rect()
         self.x = x * TILESIZE 
         self.y = y * TILESIZE
+        self.angle = 0
         self.vx, self.vy = 100, 100
         # self.player = Player
         # self.player.rect  = Player.rect
@@ -391,6 +392,8 @@ class Enemy(Sprite): # first enemy, simply directly navigates to player
         self.collide_with_walls('y')
         if self.game.wave == 6:
             self.kill()
+        self.angle += 1  
+        self.image = pg.transform.rotate(self.game.enemy_image, self.angle)
    
 
     # checks for player collision and ends game
@@ -514,6 +517,10 @@ class EnemyBoss(Sprite): # second enemy, slightly more complicated, charges at p
         self.cd = 0
         self.speedcd = 0
         self.hp = 1000
+        self.dmgcd = 0
+
+    def spawn_bullets(self, dir): # making the boss shoot homing bullet
+        return
         
 
     def collide_with_enemy2(self, dir):

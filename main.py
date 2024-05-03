@@ -41,7 +41,6 @@ class Game:
         self.running = True
         pg.key.set_repeat(500, 100)
         self.load_data()
-        self.wave = 10000
         # code borrowed from Tyler
         self.player = Player
         self.wave_timer = pg.time.get_ticks() + 10000
@@ -65,8 +64,8 @@ class Game:
             for line in f:
                 self.map_data.append(line)
 
-        self.enemy_image = pg.image.load(path.join(images, 'yellowtri.png')).convert_alpha()
-        self.enemy_image2 = pg.image.load(path.join(images, 'redtri.png')).convert_alpha()
+        self.enemy_image = pg.image.load(path.join(images, 'yellowtrirotated.png')).convert_alpha()
+        self.enemy_image2 = pg.image.load(path.join(images, 'redtrirotated.png')).convert_alpha()
 
     def new(self):
         # start all vars setup groups and instantiate classes
@@ -119,7 +118,7 @@ class Game:
                      
     # code partially borrowed from Tyler
     def spawn_enemies(self):
-        for _ in range(2):
+        for _ in range(self.wave * 1 - random.randint(1,3)):
             # col = random.randint(1, len(self.map_data[0]) - 1)  # Random column
             # row = random.randint(1, len(self.map_data) - 1)     # Random row
             # if self.map_data == '.':
