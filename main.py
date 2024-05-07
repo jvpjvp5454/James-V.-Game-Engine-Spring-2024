@@ -76,6 +76,7 @@ class Game:
         self.enemies = pg.sprite.Group()
         self.players = pg.sprite.Group()
         self.wave_enemies = pg.sprite.Group()
+        self.bullets = pg.sprite.Group()
         #self.player = Player(self, 10, 10)
         #for x in range(10, 20):
             #Wall(self, x, 5)
@@ -97,6 +98,9 @@ class Game:
                     Enemy2(self,col,row)
                 if tile == 'E':
                     new_enemy = Enemy(self, col, row)
+                if tile == 'b':
+                    Bullet(self, col ,row) # for testing purposes
+
                     # new_enemy.spawn(self.screen.get_width(), self.screen.get_height())
                 # if tile == '2':
                 #     WaitingEnemy(self,col,row)
@@ -118,7 +122,7 @@ class Game:
                      
     # code partially borrowed from Tyler
     def spawn_enemies(self):
-        for _ in range(self.wave * 1 - random.randint(1,3)):
+        for _ in range(self.wave * 2 - random.randint(1,3)):
             # col = random.randint(1, len(self.map_data[0]) - 1)  # Random column
             # row = random.randint(1, len(self.map_data) - 1)     # Random row
             # if self.map_data == '.':
@@ -128,11 +132,11 @@ class Game:
             Enemy(self, x, y)
 
     def spawn_chargers(self):
-        for _ in range(1):
+        for _ in range(self.wave * 1 - random.randint(1,3) ):
             x = random.randint(2,30)
             y = random.randint(2,22)
             Enemy2(self, x, y)
-
+    
 
     def spawn_powerups(self):
         for _ in range(6):
@@ -169,7 +173,7 @@ class Game:
             self.spawn_powerups()
             self.spawn_chargers()
             self.wave += 1
-            if self.wave == 6:
+            if self.wave == 6:  
                 self.spawn_boss()
 
 

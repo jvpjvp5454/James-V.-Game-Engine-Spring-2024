@@ -116,6 +116,11 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
             self.game.enemies.old_vx, self.game.enemies.old_vy = self.game.enemies.vx, self.game.enemies.vy  # Store old velocity
             self.game.enemies.freeze()
            
+    def collide_with_bullet(self):
+        hits = pg.sprite.spritecollide(self, self.game.bullets, False)
+        if hits:
+            self.hp = self.hp - 20
+    
     
 
     def move(self, dx, dy):
@@ -164,6 +169,7 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         self.collide_with_enemy('x')
         self.collide_with_enemy('y')
         self.collide_with_group(self.game.coins, True)
+        self.collide_with_bullet()
         self.image.fill(ORANGE)
         if self.hp < 1:
             self.currenttime = pg.time.get_ticks() / 1000
@@ -295,6 +301,14 @@ class Wall(Sprite):
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
         self.vs, self.vy = 0, 0
+
+    def collide_with_bullet(self):
+        hits = pg.sprite.spritecollide(self, self.game.bullets, True)
+        if hits:
+            return
+   
+    def update(self):
+        self.collide_with_bullet()
 
 class Powerup(Sprite): # Powerup class
     def __init__(self, game, x, y):
@@ -553,31 +567,45 @@ class EnemyBoss(Sprite): # second enemy, slightly more complicated, charges at p
         self.collide_with_enemy2('x')
         self.collide_with_enemy2('y')
         hits = pg.sprite.spritecollide(self, self.game.walls, False)
-        
-        if self.speedcd < pg.time.get_ticks() and not hits:
-            self.image = self.game.enemy_image  
-            if self.vy == -500:
-                self.vy = -100
-            if self.vy == 500:
-                self.vy = 100
-            if self.vx == -500:
-                self.vx = -100
-            if self.vx == 500:
-                self.vx = 100
 
 
-    # def freeze(self):
-    #     #Freeze the enemy in place
-    #     self.vx, self.vy = 0, 0  # Stop moving
-    #     pg.time.set_timer(pg.USEREVENT + 1, 3000)  # Set a timer for 3 seconds
+class Bullet(Sprite): # second enemy, slightly more complicated, charges at player and wanders around in different intervals
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.bullets
+        Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image.fill(DARKBLUE)
+        self.rect = self.image.get_rect()
+        self.x = x * TILESIZE * 1
+        self.y = y * TILESIZE * 1
+        self.vx, self.vy = 500, 500
+        self.bullet = 0
 
-    # def unfreeze(self):
-    #     #unfreeze the enemy#
-    #     self.vx, self.vy = self.old_vx, self.old_vy  # Restore old velocity
-    #     self.frozen = False
+    def update(self):
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt 
+        self.rect.x = self.x
+        self.rect.y = self.y
+        hits = pg.sprite.spritecollide(self, self.game.walls, False)
+        # dx = self.game.player.rect.x - self.rect.x  # difference in x-coordinates
+        # dy = self.game.player.rect.y - self.rect.y  # difference in y-coordinates
+        # self.angle = math.atan2(dy, dx) * 180 / math.pi
+        if not self.bullet == 1:
+            if self.rect.x < self.game.player.rect.x:
+                self.vx = 300
+            if self.rect.x > self.game.player.rect.x:
+                self.vx = -300
+            if self.rect.y < self.game.player.rect.y:
+                self.vy = 300
+            if self.rect.y > self.game.player.rect.y:
+                self.vy = -300
+            self.bullet = 1
 
-    # special charging script for second enemy
-
+    # def collide_with_player(self, group, kill, desc):
+    #     hits = pg.sprite.spritecollide(self, group, kill)
+    #     if hits and desc == "players":
+    #         self.game.player.hp -= 100
 
 
 
@@ -649,4 +677,3 @@ class EnemyBoss(Sprite): # second enemy, slightly more complicated, charges at p
 
 
 #     # checks for player collision and ends game
-

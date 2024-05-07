@@ -18,4 +18,5 @@ BLACK = (0,0,0)
 TEXTCOLOR = (255, 255, 255)
 ORANGE = (204, 153, 51)
 RED = (255,0,0)
+DARKBLUE = (0,0,55)
 # all the settings here
