@@ -302,13 +302,13 @@ class Wall(Sprite):
         self.rect.y = y * TILESIZE
         self.vs, self.vy = 0, 0
 
-    def collide_with_bullet(self):
-        hits = pg.sprite.spritecollide(self, self.game.bullets, True)
-        if hits:
-            return
+    # def collide_with_bullet(self):
+    #     hits = pg.sprite.spritecollide(self, self.game.bullets, True)
+    #     if hits:
+    #         print("get bulleted")
    
-    def update(self):
-        self.collide_with_bullet()
+    # def update(self):
+    #     self.collide_with_bullet()
 
 class Powerup(Sprite): # Powerup class
     def __init__(self, game, x, y):
@@ -587,20 +587,10 @@ class Bullet(Sprite): # second enemy, slightly more complicated, charges at play
         self.y += self.vy * self.game.dt 
         self.rect.x = self.x
         self.rect.y = self.y
-        hits = pg.sprite.spritecollide(self, self.game.walls, False)
+
         # dx = self.game.player.rect.x - self.rect.x  # difference in x-coordinates
         # dy = self.game.player.rect.y - self.rect.y  # difference in y-coordinates
         # self.angle = math.atan2(dy, dx) * 180 / math.pi
-        if not self.bullet == 1:
-            if self.rect.x < self.game.player.rect.x:
-                self.vx = 300
-            if self.rect.x > self.game.player.rect.x:
-                self.vx = -300
-            if self.rect.y < self.game.player.rect.y:
-                self.vy = 300
-            if self.rect.y > self.game.player.rect.y:
-                self.vy = -300
-            self.bullet = 1
 
     # def collide_with_player(self, group, kill, desc):
     #     hits = pg.sprite.spritecollide(self, group, kill)
