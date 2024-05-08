@@ -522,19 +522,21 @@ class EnemyBoss(Sprite): # second enemy, slightly more complicated, charges at p
         self.groups = game.all_sprites, game.enemies
         Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = game.enemy_image
-        #self.image.fill(RED)
+        self.image = pg.Surface((64, 64))
+        self.image.fill(RED)
         self.rect = self.image.get_rect()
-        self.x = x * TILESIZE * 1.5
-        self.y = y * TILESIZE * 1.5
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE 
         self.vx, self.vy = 500, 500
-        self.cd = 0
-        self.speedcd = 0
         self.hp = 1000
         self.dmgcd = 0
+        self.bulletcd = 0
 
     def spawn_bullets(self, dir): # making the boss shoot homing bullet
-        return
+        if not self.bulletcd > pg.time.get_ticks():
+            Bullet(self.game, self.rect.x, self.rect.y)
+            self.bulletcd = pg.time.get_ticks() + 500
+
         
 
     def collide_with_enemy2(self, dir):
@@ -568,6 +570,14 @@ class EnemyBoss(Sprite): # second enemy, slightly more complicated, charges at p
         self.collide_with_enemy2('y')
         hits = pg.sprite.spritecollide(self, self.game.walls, False)
 
+        if self.rect.x < self.game.player.rect.x:
+                    self.vx = 50
+        if self.rect.x > self.game.player.rect.x:
+                    self.vx = -50 
+        if self.rect.y < self.game.player.rect.y:
+                    self.vy = 50
+        if self.rect.y > self.game.player.rect.y:
+                    self.vy = -50
 
 class Bullet(Sprite): # second enemy, slightly more complicated, charges at player and wanders around in different intervals
     def __init__(self, game, x, y):

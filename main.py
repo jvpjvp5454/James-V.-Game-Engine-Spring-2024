@@ -173,7 +173,7 @@ class Game:
             self.spawn_powerups()
             self.spawn_chargers()
             self.wave += 1
-            if self.wave == 6:  
+            if self.wave == 1:  
                 self.spawn_boss()
 
 
