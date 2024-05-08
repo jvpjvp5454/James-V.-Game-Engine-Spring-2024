@@ -19,7 +19,7 @@
 # Future Goals
 # Enemies with varying rarities and difficulty; different every run
 # More enemy types, maybe one that stuns player somehow?
-
+# add powerup that gives dashes
 import pygame as pg 
 from settings import *
 from random import randint

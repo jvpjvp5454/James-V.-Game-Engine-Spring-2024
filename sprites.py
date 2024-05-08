@@ -515,15 +515,15 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
 
 
 
-# Boss enemy class, not implemented
+# Boss enemy class, implemented
 
-class EnemyBoss(Sprite): # second enemy, slightly more complicated, charges at player and wanders around in different intervals
+class EnemyBoss(Sprite): # Boss enemy, spawns bullets
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.enemies
         Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((64, 64))
-        self.image.fill(RED)
+        self.image = pg.Surface((128, 128))
+        self.image.fill(LIGHTRED)
         self.rect = self.image.get_rect()
         self.x = x * TILESIZE
         self.y = y * TILESIZE 
@@ -532,14 +532,16 @@ class EnemyBoss(Sprite): # second enemy, slightly more complicated, charges at p
         self.dmgcd = 0
         self.bulletcd = 0
 
-    def spawn_bullets(self, dir): # making the boss shoot homing bullet
+    def spawn_bullets(self): # making the boss shoot homing bullet
         if not self.bulletcd > pg.time.get_ticks():
-            Bullet(self.game, self.rect.x, self.rect.y)
+            x = self.rect.x
+            y = self.rect.y
+            Bullet(self.game, x, y)
             self.bulletcd = pg.time.get_ticks() + 500
+            print("spawned bullet")
+            print(self.x)
 
-        
-
-    def collide_with_enemy2(self, dir):
+    def collide_with_enemy2(self):
         hits = pg.sprite.spritecollide(self, self.game.enemies, False)
         if hits and not self.dmgcd > pg.time.get_ticks():
             self.hp = self.hp - 50
@@ -566,18 +568,18 @@ class EnemyBoss(Sprite): # second enemy, slightly more complicated, charges at p
         self.rect.y = self.y
         self.collide_with_walls('x')
         self.collide_with_walls('y')
-        self.collide_with_enemy2('x')
-        self.collide_with_enemy2('y')
+        self.collide_with_enemy2()
+        self.spawn_bullets()
         hits = pg.sprite.spritecollide(self, self.game.walls, False)
 
         if self.rect.x < self.game.player.rect.x:
-                    self.vx = 50
+                    self.vx = 40
         if self.rect.x > self.game.player.rect.x:
-                    self.vx = -50 
+                    self.vx = -40
         if self.rect.y < self.game.player.rect.y:
-                    self.vy = 50
+                    self.vy = 40
         if self.rect.y > self.game.player.rect.y:
-                    self.vy = -50
+                    self.vy = -40
 
 class Bullet(Sprite): # second enemy, slightly more complicated, charges at player and wanders around in different intervals
     def __init__(self, game, x, y):
@@ -587,10 +589,9 @@ class Bullet(Sprite): # second enemy, slightly more complicated, charges at play
         self.image = pg.Surface((TILESIZE, TILESIZE))
         self.image.fill(DARKBLUE)
         self.rect = self.image.get_rect()
-        self.x = x * TILESIZE * 1
-        self.y = y * TILESIZE * 1
-        self.vx, self.vy = 500, 500
-        self.bullet = 0
+        self.x = x 
+        self.y = y 
+        self.vx, self.vy = 0, 0
 
     def update(self):
         self.x += self.vx * self.game.dt
@@ -618,7 +619,7 @@ class Bullet(Sprite): # second enemy, slightly more complicated, charges at play
 
 
 
-
+print("This is the sprites script. To launch the game, run main.py.")
 
 
 
