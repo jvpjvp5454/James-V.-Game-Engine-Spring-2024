@@ -19,5 +19,6 @@ TEXTCOLOR = (255, 255, 255)
 ORANGE = (204, 153, 51)
 RED = (255,0,0)
 DARKBLUE = (0,0,55)
-LIGHTRED = (200,0,0)
+LIGHTRED = (255,114,118)
+PURPLE = (187,41,187)
 # all the settings here
