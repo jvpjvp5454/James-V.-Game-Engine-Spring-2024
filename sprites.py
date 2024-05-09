@@ -536,8 +536,16 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
         if not self.bulletcd > pg.time.get_ticks():
             x = self.rect.x
             y = self.rect.y
-            Bullet(self.game, x, y)
-            self.bulletcd = pg.time.get_ticks() + 500
+            if self.vx > 0:
+                Bullet(self.game, x, y, self, 300, 0)
+            if self.vx < 0:
+                Bullet(self.game, x, y, self, -300, 0)
+            if self.vy > 0:
+                Bullet(self.game, x, y, self, 0, 300)
+            if self.vy < 0:
+                Bullet(self.game, x, y, self, 0, -300)
+            
+            self.bulletcd = pg.time.get_ticks() + 1000
             print("spawned bullet")
             print(self.x)
 
@@ -582,7 +590,7 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
                     self.vy = -40
 
 class Bullet(Sprite): # second enemy, slightly more complicated, charges at player and wanders around in different intervals
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y, boss, vx, vy):
         self.groups = game.all_sprites, game.bullets
         Sprite.__init__(self, self.groups)
         self.game = game
@@ -591,7 +599,9 @@ class Bullet(Sprite): # second enemy, slightly more complicated, charges at play
         self.rect = self.image.get_rect()
         self.x = x 
         self.y = y 
-        self.vx, self.vy = 0, 0
+        # self.vx, self.vy = boss.vx * 10, boss.vy * 10
+        self.vx = vx
+        self.vy = vy
 
     def update(self):
         self.x += self.vx * self.game.dt
