@@ -58,6 +58,8 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         self.vx, self.vy = 0, 0
         self.moneybag = 0
         self.invurnable = False
+        self.dashes = 5
+        self.dashcd = 0
 
     # def load_images(self):
     #     self.standing_frames = [self.spritesheet.get_image(0,0, 32, 32), 
@@ -75,12 +77,13 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
     
     def get_keys(self):
         self.vx, self.vy = 0, 0
-    # kills coins and adds money
+    # kills coins and adds money, now adds dashes because I am not currently using money
     def collide_with_group(self, group, kill):
         hits = pg.sprite.spritecollide(self, group, kill)
         if hits:
             if str(hits[0].__class__.__name__) == "Coin":
                 self.moneybag += 1
+                self.dashes = self.dashes + 1
                 print(self.moneybag)
     # changes velcoity after hitting wall
     def collide_with_walls(self, dir):
@@ -110,7 +113,7 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
             PLAYER_SPEED = PLAYER_SPEED + 10
             print(PLAYER_SPEED)
 
-    def collide_with_powerupfreeze(self, dir):
+    def collide_with_powerupfreeze(self, dir): # unused because freeze is not working so i disabled it
         hits = pg.sprite.spritecollide(self, self.game.freezepwup, True)
         if hits:
             self.game.enemies.old_vx, self.game.enemies.old_vy = self.game.enemies.vx, self.game.enemies.vy  # Store old velocity
@@ -141,14 +144,17 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
             self.vy = PLAYER_SPEED
         if keys[pg.K_SPACE]:
             if self.vx > 0 or self.vx < 0 or self.vy > 0 or self.vy < 0:
-                if self.vy > 0:
-                    self.y = self.y + 15
-                if self.vx > 0:
-                    self.x = self.x + 15
-                if self.vy < 0:
-                    self.y = self.y - 15
-                if self.vx < 0:
-                    self.x = self.x - 15
+                if not self.dashes < 1 and self.dashcd < pg.time.get_ticks():
+                    if self.vy > 0:
+                        self.y = self.y + PLAYER_SPEED / 10 - 10
+                    if self.vx > 0:
+                        self.x = self.x + PLAYER_SPEED / 10 - 10
+                    if self.vy < 0:
+                        self.y = self.y - PLAYER_SPEED / 10 - 10
+                    if self.vx < 0:
+                        self.x = self.x - PLAYER_SPEED / 10 - 10
+                    self.dashes = self.dashes - 1
+                    self.dashcd = pg.time.get_ticks() + 1000
 
         if self.vx != 0 and self.vy != 0:
             self.vx *= 0.7071
@@ -467,7 +473,7 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
         if not self.spincd > pg.time.get_ticks():
             self.angle += 1  
             self.image = pg.transform.rotate(self.game.enemy_image, self.angle)  # rotate the image
-
+         # end of copilot code
 
 
     # def freeze(self):
@@ -483,15 +489,15 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
 
     # special charging script for second enemy
     def charge_at_player(self):
-        # AI gen code
+        # AI gen modified code
         dx = self.game.player.rect.x - self.rect.x  # difference in x-coordinates
         dy = self.game.player.rect.y - self.rect.y  # difference in y-coordinates
         dist = math.hypot(dx, dy)  # distance between player and enemy
         self.image = pg.transform.rotate(self.game.enemy_image2, -self.angle)  # rotate the image
         # End of AI code
         if not self.cd > pg.time.get_ticks():
-            self.spincd = pg.time.get_ticks() +  1000
-            # produced by AI
+            self.spincd = pg.time.get_ticks() +  1500
+            # produced by AI, modified to fit
             self.angle = math.atan2(dy, dx) * 180 / math.pi
             self.image = self.game.enemy_image2
             nx = dx / dist
@@ -560,7 +566,7 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
             print("spawned bullet")
             print(self.x)
 
-    def spawn_bullet_barrage(self):
+    def spawn_bullet_barrage(self): # spawns bullets all around boss at certain intervals
         if not self.bulletbarragecd > pg.time.get_ticks():
             x = self.rect.x
             y = self.rect.y
@@ -627,7 +633,7 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
         if self.hp < 1:
             self.kill()
 
-class Bullet(Sprite): # second enemy, slightly more complicated, charges at player and wanders around in different intervals
+class Bullet(Sprite): # bullet, shot from boss
     def __init__(self, game, x, y, boss, vx, vy):
         self.groups = game.all_sprites, game.bullets
         Sprite.__init__(self, self.groups)
@@ -638,8 +644,8 @@ class Bullet(Sprite): # second enemy, slightly more complicated, charges at play
         self.x = x 
         self.y = y 
         # self.vx, self.vy = boss.vx * 10, boss.vy * 10
-        self.vx = vx
-        self.vy = vy
+        self.vx = vx # vx and vy determined when it is spawned by boss
+        self.vy = vy 
 
     def update(self):
         self.x += self.vx * self.game.dt

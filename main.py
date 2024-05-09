@@ -14,12 +14,16 @@
     # Also added hp and indicator when you are damaged
 
 # Final Project Goal:
-    # Boss enemy that spawns after a certain amount of time, maybe to kill it you have to get charging enemies to ram into it (dodging mechanic?), powerup/materials that allows player to build a wall per powerup
+    # Boss enemy that spawns after a certain amount of time, maybe to kill it you have to get charging enemies to ram into it (dodging mechanic?), (done)
+# powerup/materials that allows player to build a wall per powerup (WIP)
 
 # Future Goals
 # Enemies with varying rarities and difficulty; different every run
+
 # More enemy types, maybe one that stuns player somehow?
-# add powerup that gives dashes
+
+# add powerup that gives dashes (done)
+
 import pygame as pg 
 from settings import *
 from random import randint
@@ -41,6 +45,7 @@ class Game:
         self.running = True
         pg.key.set_repeat(500, 100)
         self.load_data()
+        self.font = pg.font.Font(None, 36)  # Load a font (None = default font)
         # code borrowed from Tyler
         self.player = Player
         self.wave_timer = pg.time.get_ticks() + 10000
@@ -140,10 +145,14 @@ class Game:
     
 
     def spawn_powerups(self):
-        for _ in range(6):
+        for _ in range(random.randint(1,3)):
             x = random.randint(0,32 - 1)
             y = random.randint(0,24 - 1)
             Powerup(self, x, y)
+        for _ in range(random.randint(3,7)):
+            x = random.randint(0,32 - 1)
+            y = random.randint(0,24 - 1)
+            Coin(self, x, y)
 
             #Enemy(self, col, row)
 #self.screen.get_width(), self.screen.get_height())
@@ -195,11 +204,10 @@ class Game:
         self.all_sprites.draw(self.screen)
         self.draw_grid()
         self.draw_text(self.screen, str(self.survtime.current_time), 24, WHITE, WIDTH/2 - 32, 2)
+        dash_text = f"Dashes left: {self.player.dashes}"
+        text_surface = self.font.render(dash_text, True, (255, 255, 255))  # White text
+        self.screen.blit(text_surface, (0, self.screen.get_height() - text_surface.get_height()))
         pg.display.flip()
-
-
-
-
 
 
 
