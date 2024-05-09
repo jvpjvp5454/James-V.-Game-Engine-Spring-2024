@@ -490,7 +490,7 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
         self.image = pg.transform.rotate(self.game.enemy_image2, -self.angle)  # rotate the image
         # End of AI code
         if not self.cd > pg.time.get_ticks():
-            self.spincd = pg.time.get_ticks() +  500
+            self.spincd = pg.time.get_ticks() +  1000
             # produced by AI
             self.angle = math.atan2(dy, dx) * 180 / math.pi
             self.image = self.game.enemy_image2
@@ -500,7 +500,7 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
             self.vx = nx * speed
             self.vy = ny * speed
             # End of AI code
-            
+
             # if self.rect.x < self.game.player.rect.x:
             #     self.vx = 400
             # if self.rect.x > self.game.player.rect.x:
@@ -541,7 +541,7 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
         self.hp = 400
         self.dmgcd = 0
         self.bulletcd = 0
-        self.flickercd = 0
+        self.bulletbarragecd = 2000 + pg.time.get_ticks()
 
     def spawn_bullets(self): # making the boss shoot homing bullet
         if not self.bulletcd > pg.time.get_ticks():
@@ -560,12 +560,29 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
             print("spawned bullet")
             print(self.x)
 
+    def spawn_bullet_barrage(self):
+        if not self.bulletbarragecd > pg.time.get_ticks():
+            x = self.rect.x
+            y = self.rect.y
+            for i in range(random.randint(3,8)):
+                if random.randint(1,2) == 2:
+                    Bullet(self.game, x, y, self, 300, 0)
+                    Bullet(self.game, x, y, self, -300, 0)
+                    Bullet(self.game, x, y, self, 0, 300)
+                    Bullet(self.game, x, y, self, 0, -300)
+                else:
+                    Bullet(self.game, x, y, self, 300, 300)
+                    Bullet(self.game, x, y, self, -300, -300)
+                    Bullet(self.game, x, y, self, 300, -300)
+                    Bullet(self.game, x, y, self, -300, 300)
+            self.bulletbarragecd = pg.time.get_ticks() + 4000
+
+
     def collide_with_enemy2(self):
         hits = pg.sprite.spritecollide(self, self.game.enemychargers, False)
         if hits and not self.dmgcd > pg.time.get_ticks():
             self.hp = self.hp - 50
-            self.dmgcd = pg.time.get_ticks() + 200
-            self.flickercd = 500 + pg.time.get_ticks()
+            self.dmgcd = pg.time.get_ticks() + 500
     
     def collide_with_walls(self, dir):
         if dir == 'x':
@@ -590,9 +607,10 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
         self.collide_with_walls('y')
         self.collide_with_enemy2()
         self.spawn_bullets()
+        self.spawn_bullet_barrage()
         hits = pg.sprite.spritecollide(self, self.game.walls, False)
 
-        if self.flickercd < pg.time.get_ticks():
+        if self.dmgcd < pg.time.get_ticks():
             self.image.fill(PURPLE)
         else:
             self.image.fill(LIGHTRED)
