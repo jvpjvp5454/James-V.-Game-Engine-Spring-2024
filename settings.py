@@ -21,4 +21,5 @@ RED = (255,0,0)
 DARKBLUE = (0,0,55)
 LIGHTRED = (255,114,118)
 PURPLE = (187,41,187)
+DARKGREEN = (1,50,32)
 # all the settings here

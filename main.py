@@ -83,6 +83,7 @@ class Game:
         self.wave_enemies = pg.sprite.Group()
         self.bullets = pg.sprite.Group()
         self.enemychargers = pg.sprite.Group()
+        self.healthkits = pg.sprite.Group()
         #self.player = Player(self, 10, 10)
         #for x in range(10, 20):
             #Wall(self, x, 5)
@@ -122,13 +123,13 @@ class Game:
  
     # inputs
     def events(self):
-        for event in pg.event.get():                                                                                   # Bruh
+        for event in pg.event.get():                                                                                 # Bruh
                 if event.type == pg.QUIT: 
                     self.quit()
                      
-    # code partially borrowed from Tyler
+    # code borrowed from Tyler but modified to fit my game
     def spawn_enemies(self):
-        for _ in range(self.wave * 2 - random.randint(1,3)):
+        for _ in range(random.randint(0,2)):
             # col = random.randint(1, len(self.map_data[0]) - 1)  # Random column
             # row = random.randint(1, len(self.map_data) - 1)     # Random row
             # if self.map_data == '.':
@@ -138,7 +139,7 @@ class Game:
             Enemy(self, x, y)
 
     def spawn_chargers(self):
-        for _ in range(self.wave * 1 - random.randint(1,3) ):
+        for _ in range(random.randint(0,1)):
             x = random.randint(2,30)
             y = random.randint(2,22)
             Enemy2(self, x, y)
@@ -146,14 +147,17 @@ class Game:
 
     def spawn_powerups(self):
         for _ in range(random.randint(1,3)):
-            x = random.randint(0,32 - 1)
-            y = random.randint(0,24 - 1)
+            x = random.randint(0,30)
+            y = random.randint(0,22)
             Powerup(self, x, y)
         for _ in range(random.randint(3,7)):
-            x = random.randint(0,32 - 1)
-            y = random.randint(0,24 - 1)
+            x = random.randint(0,30)
+            y = random.randint(0,22)
             Coin(self, x, y)
-
+        for _ in range(random.randint(0,2)):
+            x = random.randint(0,30)
+            y = random.randint(0,22)
+            Healthkit(self, x, y)
             #Enemy(self, col, row)
 #self.screen.get_width(), self.screen.get_height())
         # movement controls
@@ -177,14 +181,15 @@ class Game:
         self.all_sprites.update()
         self.survtime.ticking()
         if self.wave_timer < pg.time.get_ticks():
-            self.wave_timer = pg.time.get_ticks() + 10000
-            if not self.wave > 5:  
+            self.wave_timer = pg.time.get_ticks() + 10000 
+            if not self.wave == 6:
                 self.spawn_enemies()
             self.spawn_powerups()
             self.spawn_chargers()
             self.wave += 1
-            if self.wave == 1:  
-                self.spawn_boss()
+            print(self.wave)
+            if self.wave == 6:  
+                 self.spawn_boss()
 
 
     def spawn_boss(self):

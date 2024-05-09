@@ -60,7 +60,8 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         self.invurnable = False
         self.dashes = 5
         self.dashcd = 0
-
+        self.dashstrength = 30
+        self.healthtick = 0
     # def load_images(self):
     #     self.standing_frames = [self.spritesheet.get_image(0,0, 32, 32), 
     #                             self.spritesheet.get_image(32,0, 32, 32)]
@@ -112,6 +113,13 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         if hits:
             PLAYER_SPEED = PLAYER_SPEED + 10
             print(PLAYER_SPEED)
+            self.dashstrength = self.dashstrength + 2
+
+    def collide_with_healthkit(self):
+        hits = pg.sprite.spritecollide(self, self.game.healthkits, True)
+        if hits:
+            self.hp = self.hp + 10
+            self.healthtick = pg.time.get_ticks() + 250
 
     def collide_with_powerupfreeze(self, dir): # unused because freeze is not working so i disabled it
         hits = pg.sprite.spritecollide(self, self.game.freezepwup, True)
@@ -146,15 +154,15 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
             if self.vx > 0 or self.vx < 0 or self.vy > 0 or self.vy < 0:
                 if not self.dashes < 1 and self.dashcd < pg.time.get_ticks():
                     if self.vy > 0:
-                        self.y = self.y + PLAYER_SPEED / 10 - 10
+                        self.y = self.y + self.dashstrength
                     if self.vx > 0:
-                        self.x = self.x + PLAYER_SPEED / 10 - 10
+                        self.x = self.x + self.dashstrength 
                     if self.vy < 0:
-                        self.y = self.y - PLAYER_SPEED / 10 - 10
+                        self.y = self.y - self.dashstrength
                     if self.vx < 0:
-                        self.x = self.x - PLAYER_SPEED / 10 - 10
+                        self.x = self.x - self.dashstrength
                     self.dashes = self.dashes - 1
-                    self.dashcd = pg.time.get_ticks() + 1000
+                    self.dashcd = pg.time.get_ticks() + 250
 
         if self.vx != 0 and self.vy != 0:
             self.vx *= 0.7071
@@ -177,7 +185,8 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         self.collide_with_enemy('y')
         self.collide_with_group(self.game.coins, True)
         self.collide_with_bullet()
-        self.image.fill(ORANGE)
+        self.collide_with_healthkit()
+        # self.image.fill(ORANGE)
         if self.hp < 1:
             self.currenttime = pg.time.get_ticks() / 1000
             pg.quit()
@@ -186,8 +195,12 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         if self.dmgcd > pg.time.get_ticks():
             self.image.fill(RED)
             if self.flickercd < pg.time.get_ticks():
+                # if self.healthtick > pg.time.get_ticks():
+                #     self.image.fill(GREEN)
+               # else:
                 self.image.fill(ORANGE) 
                 self.flickercd = 200 + pg.time.get_ticks()
+                
         else: 
             self.image.fill(ORANGE)
 
@@ -354,6 +367,20 @@ class Coin(Sprite): #coin class
         self.rect.y = y * TILESIZE
         self.vs, self.vy = 0, 0
 
+class Healthkit(Sprite): #coin class
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.healthkits
+        Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image.fill(DARKGREEN)
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect( )
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+        self.vs, self.vy = 0, 0
+
 class Enemy(Sprite): # first enemy, simply directly navigates to player
     # enemy init
     def __init__(self, game, x, y):
@@ -368,6 +395,7 @@ class Enemy(Sprite): # first enemy, simply directly navigates to player
         self.y = y * TILESIZE
         self.angle = 0
         self.vx, self.vy = 100, 100
+        self.speed = random.randint(50, 150)
         # self.player = Player
         # self.player.rect  = Player.rect
 
@@ -400,13 +428,13 @@ class Enemy(Sprite): # first enemy, simply directly navigates to player
         self.y += self.vy * self.game.dt
         
         if self.rect.x < self.game.player.rect.x:
-            self.vx = 110
+            self.vx = self.speed
         if self.rect.x > self.game.player.rect.x:
-            self.vx = -110    
+            self.vx = -1 * self.speed
         if self.rect.y < self.game.player.rect.y:
-            self.vy = 110
+            self.vy = self.speed
         if self.rect.y > self.game.player.rect.y:
-            self.vy = -110
+            self.vy = -1 * self.speed
         self.rect.x = self.x
         self.collide_with_walls('x')
         self.rect.y = self.y
@@ -544,7 +572,7 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
         self.x = x * TILESIZE
         self.y = y * TILESIZE 
         self.vx, self.vy = 500, 500
-        self.hp = 400
+        self.hp = 800
         self.dmgcd = 0
         self.bulletcd = 0
         self.bulletbarragecd = 2000 + pg.time.get_ticks()
