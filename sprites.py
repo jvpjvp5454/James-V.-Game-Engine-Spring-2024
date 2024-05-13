@@ -367,6 +367,14 @@ class Coin(Sprite): #coin class
         self.rect.y = y * TILESIZE
         self.vs, self.vy = 0, 0
 
+    def collide_with_wall(self):
+        hits = pg.sprite.spritecollide(self, self.game.walls, False)
+        if hits:
+            self.kill()
+
+    def update(self):
+        self.collide_with_wall()
+
 class Healthkit(Sprite): #coin class
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.healthkits
@@ -439,7 +447,7 @@ class Enemy(Sprite): # first enemy, simply directly navigates to player
         self.collide_with_walls('x')
         self.rect.y = self.y
         self.collide_with_walls('y')
-        if self.game.wave == 6:
+        if self.game.wave == 3:
             self.kill()
         self.angle += 1  
         self.image = pg.transform.rotate(self.game.enemy_image, self.angle)
@@ -613,7 +621,7 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
 
 
     def collide_with_enemy2(self):
-        hits = pg.sprite.spritecollide(self, self.game.enemychargers, False)
+        hits = pg.sprite.spritecollide(self, self.game.enemychargers, True)
         if hits and not self.dmgcd > pg.time.get_ticks():
             self.hp = self.hp - 50
             self.dmgcd = pg.time.get_ticks() + 500

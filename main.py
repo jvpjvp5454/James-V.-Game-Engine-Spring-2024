@@ -54,9 +54,10 @@ class Game:
         self.font = pg.font.Font(None, 36)  # Load a font (None = default font)
         # code borrowed from Tyler
         self.player = Player
-        self.wave_timer = pg.time.get_ticks() + 10000
+        self.wave_timer = pg.time.get_ticks() + 20000
         print(len(self.map_data))
         self.wave = 0
+        self.wave_timer_chargers = 5000
 
     def draw_text(self, surface, text, size, color, x, y):
         font_name = pg.font.match_font('arial')
@@ -145,7 +146,7 @@ class Game:
             Enemy(self, x, y)
 
     def spawn_chargers(self):
-        for _ in range(random.randint(0,1)):
+        for _ in range(random.randint(0,2)):
             x = random.randint(2,30)
             y = random.randint(2,22)
             Enemy2(self, x, y)
@@ -153,16 +154,16 @@ class Game:
 
     def spawn_powerups(self):
         for _ in range(random.randint(1,3)):
-            x = random.randint(0,30)
-            y = random.randint(0,22)
+            x = random.randint(1,30)
+            y = random.randint(1,22)
             Powerup(self, x, y)
         for _ in range(random.randint(3,7)):
-            x = random.randint(0,30)
-            y = random.randint(0,22)
+            x = random.randint(1,30)
+            y = random.randint(1,22)
             Coin(self, x, y)
         for _ in range(random.randint(0,2)):
-            x = random.randint(0,30)
-            y = random.randint(0,22)
+            x = random.randint(1,30)
+            y = random.randint(1,22)
             Healthkit(self, x, y)
             #Enemy(self, col, row)
 #self.screen.get_width(), self.screen.get_height())
@@ -187,15 +188,19 @@ class Game:
         self.all_sprites.update()
         self.survtime.ticking()
         if self.wave_timer < pg.time.get_ticks():
-            self.wave_timer = pg.time.get_ticks() + 10000 
-            if not self.wave == 6:
+            self.wave_timer = pg.time.get_ticks() + 20000 
+            if not self.wave == 3:
                 self.spawn_enemies()
             self.spawn_powerups()
             self.spawn_chargers()
             self.wave += 1
             print(self.wave)
-            if self.wave == 6:  
+            if self.wave == 3:  
                  self.spawn_boss()
+        if self.wave_timer_chargers < pg.time.get_ticks() and self.wave == 3:
+            self.wave_timer_chargers = pg.time.get_ticks() + 5000
+            self.spawn_chargers()
+        
 
 
     def spawn_boss(self):
@@ -205,15 +210,15 @@ class Game:
             EnemyBoss(self, x, y)
           
 
-    def draw_grid(self): # draws the visual grid
-        for x in range(0, WIDTH, TILESIZE):
-            pg.draw.line(self.screen, LIGHTGRAY, (x, 0), (x, HEIGHT))
-        for y in range(0, WIDTH, TILESIZE):
-            pg.draw.line(self.screen, LIGHTGRAY, (0, y), (WIDTH, y))
+    # def draw_grid(self): # draws the visual grid
+    #     for x in range(0, WIDTH, TILESIZE):
+    #         pg.draw.line(self.screen, LIGHTGRAY, (x, 0), (x, HEIGHT))
+    #     for y in range(0, WIDTH, TILESIZE):
+    #         pg.draw.line(self.screen, LIGHTGRAY, (0, y), (WIDTH, y))
     def draw(self): # draws timer sprites, and everything
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
-        self.draw_grid()
+    
         self.draw_text(self.screen, str(self.survtime.current_time), 24, WHITE, WIDTH/2 - 32, 2)
         dash_text = f"Dashes left: {self.player.dashes}"
         text_surface = self.font.render(dash_text, True, (255, 255, 255))  # White text
