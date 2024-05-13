@@ -132,6 +132,9 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         if hits and not self.dmgcd > pg.time.get_ticks():
             self.hp = self.hp - 20
             self.dmgcd = pg.time.get_ticks() + 200
+
+    def collide_with_bomb(self):
+        pass
     
     
 
@@ -723,14 +726,23 @@ class Bomb(Sprite): # bomb, shot from boss
         self.loss = 0
         self.ticking = pg.time.get_ticks() + 5000
         self.flickercd = 0
-
+        self.tickcount = 1000
     def tick(self):
-        if self.ticking > pg.time.get_ticks():
-            if self.flickercd < pg.time.get_ticks():
-                self.image.fill(RED)
-                self.flickercd = 200 + pg.time.get_ticks()
-            else:
-                self.image.fill(DARKBLUE)
+        if self.flickercd < pg.time.get_ticks():
+            self.image.fill(RED)
+            self.flickercd = self.tickcount + pg.time.get_ticks()
+            self.tickcount = self.tickcount - 100
+            print(self.tickcount)
+        else:
+            self.image.fill(DARKBLUE)
+
+    def explode(self):
+        if self.tickcount < 0 or self.tickcount == 0:
+            x, y = self.rect.x, self.rect.y
+            BombRadius(self.game, x, y)
+            self.kill()
+            print("I exploded! hopefully...")
+
 
     def update(self):
         self.x += self.vx * self.game.dt 
@@ -738,27 +750,24 @@ class Bomb(Sprite): # bomb, shot from boss
         self.rect.x = self.x
         self.rect.y = self.y
         self.vx, self.vy = self.vx * 0.97, self.vy * 0.97
-        # if self.ticking < pg.time.get_ticks():
-        #     pass
+        self.tick()
+        self.explode()
 
-        # dx = self.game.player.rect.x - self.rect.x  # difference in x-coordinates
-        # dy = self.game.player.rect.y - self.rect.y  # difference in y-coordinates
-        # self.angle = math.atan2(dy, dx) * 180 / math.pi
+class BombRadius(Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.bullets
+        Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.Surface((80, 80))
+        self.image.fill(RED)
+        self.rect = self.image.get_rect()
+        self.rect.x = x 
+        self.rect.y = y 
+        self.timetodie = 500
 
-    # def collide_with_player(self, group, kill, desc):
-    #     hits = pg.sprite.spritecollide(self, group, kill)
-    #     if hits and desc == "players":
-    #         self.game.player.hp -= 100
-
-
-
-
-
-
-
-
-
-
+    def update(self):
+        if pg.time.get_ticks() > self.timetodie:
+            self.kill()
 
 
 print("This is the sprites script. To launch the game, run main.py.")
