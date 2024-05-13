@@ -24,6 +24,12 @@
 
 # add powerup that gives dashes (done)
 
+# Sources:
+# Copilot for various different ways including corrected errors and syntax and generating code
+# Tyler for help with the wave system and spawning enemies
+# Stackoverflow for fixing errors
+
+
 import pygame as pg 
 from settings import *
 from random import randint
