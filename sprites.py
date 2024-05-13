@@ -602,6 +602,23 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
             print("spawned bullet")
             print(self.x)
 
+    def spawn_bomb(self): # making the boss shoot homing bullet
+        if not self.bulletcd > pg.time.get_ticks():
+            x = self.rect.x
+            y = self.rect.y
+            if self.vx > 0:
+                Bomb(self.game, x, y, self, 300, 0)
+            if self.vx < 0:
+                Bomb(self.game, x, y, self, -300, 0)
+            if self.vy > 0:
+                Bomb(self.game, x, y, self, 0, 300)
+            if self.vy < 0:
+                Bomb(self.game, x, y, self, 0, -300)
+            
+            self.bulletcd = pg.time.get_ticks() + 1000
+            print("spawned bullet")
+            print(self.x)
+
     def spawn_bullet_barrage(self): # spawns bullets all around boss at certain intervals
         if not self.bulletbarragecd > pg.time.get_ticks():
             x = self.rect.x
@@ -683,11 +700,46 @@ class Bullet(Sprite): # bullet, shot from boss
         self.vx = vx # vx and vy determined when it is spawned by boss
         self.vy = vy 
 
+
     def update(self):
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt 
         self.rect.x = self.x
         self.rect.y = self.y
+
+class Bomb(Sprite): # bomb, shot from boss
+    def __init__(self, game, x, y, boss, vx, vy):
+        self.groups = game.all_sprites, game.bullets
+        Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image.fill(DARKBLUE)
+        self.rect = self.image.get_rect()
+        self.x = x 
+        self.y = y 
+        # self.vx, self.vy = boss.vx * 10, boss.vy * 10
+        self.vx = vx # vx and vy determined when it is spawned by boss
+        self.vy = vy 
+        self.loss = 0
+        self.ticking = pg.time.get_ticks() + 5000
+        self.flickercd = 0
+
+    def tick(self):
+        if self.ticking > pg.time.get_ticks():
+            if self.flickercd < pg.time.get_ticks():
+                self.image.fill(RED)
+                self.flickercd = 200 + pg.time.get_ticks()
+            else:
+                self.image.fill(DARKBLUE)
+
+    def update(self):
+        self.x += self.vx * self.game.dt 
+        self.y += self.vy * self.game.dt
+        self.rect.x = self.x
+        self.rect.y = self.y
+        self.vx, self.vy = self.vx * 0.97, self.vy * 0.97
+        # if self.ticking < pg.time.get_ticks():
+        #     pass
 
         # dx = self.game.player.rect.x - self.rect.x  # difference in x-coordinates
         # dy = self.game.player.rect.y - self.rect.y  # difference in y-coordinates

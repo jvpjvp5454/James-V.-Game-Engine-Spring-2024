@@ -15,7 +15,6 @@
 
 # Final Project Goal:
     # Boss enemy that spawns after a certain amount of time, maybe to kill it you have to get charging enemies to ram into it (dodging mechanic?), (done)
-# powerup/materials that allows player to build a wall per powerup (WIP)
 
 # Future Goals
 # Enemies with varying rarities and difficulty; different every run
@@ -58,6 +57,7 @@ class Game:
         print(len(self.map_data))
         self.wave = 0
         self.wave_timer_chargers = 5000
+        self.boss = EnemyBoss
 
     def draw_text(self, surface, text, size, color, x, y):
         font_name = pg.font.match_font('arial')
@@ -114,6 +114,8 @@ class Game:
                     new_enemy = Enemy(self, col, row)
                 if tile == 'b':
                     Bullet(self, col ,row) # for testing purposes
+                if tile == 'm':
+                    Bomb(self,col,row, self.boss, 0, 200)
 
                     # new_enemy.spawn(self.screen.get_width(), self.screen.get_height())
                 # if tile == '2':
