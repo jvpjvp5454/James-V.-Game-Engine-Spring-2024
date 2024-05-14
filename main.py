@@ -91,6 +91,7 @@ class Game:
         self.bullets = pg.sprite.Group()
         self.enemychargers = pg.sprite.Group()
         self.healthkits = pg.sprite.Group()
+        self.bombs = pg.sprite.Group()
         #self.player = Player(self, 10, 10)
         #for x in range(10, 20):
             #Wall(self, x, 5)

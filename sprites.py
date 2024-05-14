@@ -134,7 +134,10 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
             self.dmgcd = pg.time.get_ticks() + 200
 
     def collide_with_bomb(self):
-        pass
+        hits = pg.sprite.spritecollide(self, self.game.bombs, False)
+        if hits and not self.dmgcd > pg.time.get_ticks():
+            self.hp = self.hp - 50
+            self.dmgcd = pg.time.get_ticks() + 200
     
     
 
@@ -712,7 +715,7 @@ class Bullet(Sprite): # bullet, shot from boss
 
 class Bomb(Sprite): # bomb, shot from boss
     def __init__(self, game, x, y, boss, vx, vy):
-        self.groups = game.all_sprites, game.bullets
+        self.groups = game.all_sprites, game.bombs
         Sprite.__init__(self, self.groups)
         self.game = game
         self.image = pg.Surface((TILESIZE, TILESIZE))
