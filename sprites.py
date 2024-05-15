@@ -477,6 +477,9 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
         self.speedcd = 0
         self.angle = 0
         self.spincd = 0
+        self.stuck = 0
+        self.waittime = 0
+        self.checking = 0
     
     def collide_with_walls(self, dir):
         if dir == 'x':
@@ -490,6 +493,20 @@ class Enemy2(Sprite): # second enemy, slightly more complicated, charges at play
             if hits:
                 self.vy *= -1
                 self.rect.y = self.y
+
+    def collision_fallback(self):
+        if self.stuck == True:
+            self.kill()
+        hits = pg.sprite.spritecollide(self, self.game.walls, False)
+        if hits:
+            if self.waittime > pg.time.get_ticks():
+                pass
+            else:
+                if self.checking == True:
+                    self.stuck = True
+                if self.checking == False:
+                    self.checking = True
+                    self.waittime = pg.time.get_ticks() + 2000
 
     # same as previous but with increased speed
     def update(self):
@@ -590,6 +607,7 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
         self.dmgcd = 0
         self.bulletcd = 0
         self.bulletbarragecd = 2000 + pg.time.get_ticks()
+        self.bombcd = 3000 + pg.time.get_ticks()
 
     def spawn_bullets(self): # making the boss shoot homing bullet
         if not self.bulletcd > pg.time.get_ticks():
@@ -609,19 +627,15 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
             print(self.x)
 
     def spawn_bomb(self): # making the boss shoot homing bullet
-        if not self.bulletcd > pg.time.get_ticks():
+        if not self.bombcd > pg.time.get_ticks():
             x = self.rect.x
             y = self.rect.y
-            if self.vx > 0:
-                Bomb(self.game, x, y, self, 300, 0)
-            if self.vx < 0:
-                Bomb(self.game, x, y, self, -300, 0)
-            if self.vy > 0:
-                Bomb(self.game, x, y, self, 0, 300)
-            if self.vy < 0:
-                Bomb(self.game, x, y, self, 0, -300)
+            Bomb(self.game, x, y, self, 150, 150)
+            Bomb(self.game, x, y, self, 150, -150)
+            Bomb(self.game, x, y, self, -150, 150)
+            Bomb(self.game, x, y, self, -150, -150)
             
-            self.bulletcd = pg.time.get_ticks() + 1000
+            self.bombcd = pg.time.get_ticks() + 7000
             print("spawned bullet")
             print(self.x)
 
@@ -641,6 +655,8 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
                     Bullet(self.game, x, y, self, 300, -300)
                     Bullet(self.game, x, y, self, -300, 300)
             self.bulletbarragecd = pg.time.get_ticks() + 4000
+
+        
 
 
     def collide_with_enemy2(self):
@@ -673,6 +689,7 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
         self.collide_with_enemy2()
         self.spawn_bullets()
         self.spawn_bullet_barrage()
+        self.spawn_bomb()
         hits = pg.sprite.spritecollide(self, self.game.walls, False)
 
         if self.dmgcd < pg.time.get_ticks():
@@ -761,7 +778,7 @@ class BombRadius(Sprite):
         self.groups = game.all_sprites, game.bullets
         Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((80, 80))
+        self.image = pg.Surface((100, 100))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
         self.rect.x = x 
