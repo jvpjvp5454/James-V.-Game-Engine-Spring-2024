@@ -52,7 +52,7 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         self.last_update = 0
         self.material = True
         self.walking = False
-        self.hp = 100
+        self.hp = 150
         self.dmgcd = 0
         self.flickercd = 0
         self.vx, self.vy = 0, 0
@@ -603,7 +603,7 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
         self.x = x * TILESIZE
         self.y = y * TILESIZE 
         self.vx, self.vy = 500, 500
-        self.hp = 800
+        self.hp = 500
         self.dmgcd = 0
         self.bulletcd = 0
         self.bulletbarragecd = 2000 + pg.time.get_ticks()
@@ -758,7 +758,8 @@ class Bomb(Sprite): # bomb, shot from boss
 
     def explode(self):
         if self.tickcount < 0 or self.tickcount == 0:
-            x, y = self.rect.x, self.rect.y
+            # x, y = self.rect.x, self.rect.y
+            x, y = self.rect.center
             BombRadius(self.game, x, y)
             self.kill()
             print("I exploded! hopefully...")
@@ -778,12 +779,13 @@ class BombRadius(Sprite):
         self.groups = game.all_sprites, game.bullets
         Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((100, 100))
+        self.image = pg.Surface((150, 150))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
-        self.rect.x = x 
-        self.rect.y = y 
-        self.timetodie = 500
+        # self.rect.x = x 
+        # self.rect.y = y 
+        self.timetodie = 750
+        self.rect.center = (x, y)
 
     def update(self):
         if pg.time.get_ticks() > self.timetodie:

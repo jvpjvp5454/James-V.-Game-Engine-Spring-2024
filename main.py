@@ -201,9 +201,10 @@ class Game:
             if self.wave == 3:  
                  self.spawn_boss()
         if self.wave_timer_chargers < pg.time.get_ticks() and self.wave == 3:
-            self.wave_timer_chargers = pg.time.get_ticks() + 2000
+            self.wave_timer_chargers = pg.time.get_ticks() + 1000
             self.spawn_chargers()
         
+ 
 
 
     def spawn_boss(self):
@@ -221,7 +222,22 @@ class Game:
     def draw(self): # draws timer sprites, and everything
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
-    
+        health_percentage = self.player.hp / 150
+        health_bar_width = 100
+        health_bar_height = 20
+        padding = 5
+        # Copilot gen code
+        if health_percentage > 0.5:
+            color = GREEN
+        elif health_percentage > 0.25:
+            color = YELLOW
+        else:
+            color = DARKRED
+        # end of copilot gen codew
+        x = self.screen.get_width() - health_bar_width - padding
+        y = self.screen.get_height() - health_bar_height - padding  
+        pg.draw.rect(self.screen, RED, (x, y, health_bar_width, health_bar_height))
+        pg.draw.rect(self.screen, color, (x, y, health_bar_width * (self.player.hp / 150), health_bar_height))
         self.draw_text(self.screen, str(self.survtime.current_time), 24, WHITE, WIDTH/2 - 32, 2)
         dash_text = f"Dashes left: {self.player.dashes}"
         text_surface = self.font.render(dash_text, True, (255, 255, 255))  # White text

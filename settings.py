@@ -5,7 +5,7 @@ WIDTH = 1024
 HEIGHT = 768
 TILESIZE = 32
 YELLOW = (255,255,0)
-TITLE = "Placeholder"
+TITLE = "Run from the triangles"
 FPS = 30
 SKYBLUE = (111, 186, 234)
 LIGHTGRAY = (75,75,75)
@@ -22,4 +22,5 @@ DARKBLUE = (0,0,55)
 LIGHTRED = (255,114,118)
 PURPLE = (187,41,187)
 DARKGREEN = (1,50,32)
+DARKRED = (139,0,0)
 # all the settings here
