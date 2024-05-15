@@ -695,7 +695,7 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
         if self.dmgcd < pg.time.get_ticks():
             self.image.fill(PURPLE)
         else:
-            self.image.fill(LIGHTRED)
+            self.image.fill(RED)
 
         if self.rect.x < self.game.player.rect.x:
                     self.vx = 40

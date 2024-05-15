@@ -25,7 +25,7 @@
 
 # Sources:
 # Copilot for various different ways including corrected errors and syntax and generating code
-# Tyler for help with the wave system and spawning enemies
+# Tyler Reed for help with the wave system and spawning enemies
 # Stackoverflow for fixing errors
 
 
@@ -139,7 +139,7 @@ class Game:
                      
     # code borrowed from Tyler but modified to fit my game
     def spawn_enemies(self):
-        for _ in range(random.randint(0,2)):
+        for _ in range(random.randint(0,1)):
             # col = random.randint(1, len(self.map_data[0]) - 1)  # Random column
             # row = random.randint(1, len(self.map_data) - 1)     # Random row
             # if self.map_data == '.':
@@ -149,7 +149,7 @@ class Game:
             Enemy(self, x, y)
 
     def spawn_chargers(self):
-        for _ in range(random.randint(0,2)):
+        for _ in range(random.randint(0,1)):
             x = random.randint(2,30)
             y = random.randint(2,22)
             Enemy2(self, x, y)
@@ -201,7 +201,7 @@ class Game:
             if self.wave == 3:  
                  self.spawn_boss()
         if self.wave_timer_chargers < pg.time.get_ticks() and self.wave == 3:
-            self.wave_timer_chargers = pg.time.get_ticks() + 5000
+            self.wave_timer_chargers = pg.time.get_ticks() + 2000
             self.spawn_chargers()
         
 
