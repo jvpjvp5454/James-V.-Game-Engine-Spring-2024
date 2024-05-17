@@ -111,7 +111,7 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         hits = pg.sprite.spritecollide(self, self.game.pwup, True)
         global PLAYER_SPEED
         if hits:
-            PLAYER_SPEED = PLAYER_SPEED + 10
+            PLAYER_SPEED = PLAYER_SPEED + 5
             print(PLAYER_SPEED)
             self.dashstrength = self.dashstrength + 2
 
@@ -121,11 +121,11 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
             self.hp = self.hp + 10
             self.healthtick = pg.time.get_ticks() + 250
 
-    def collide_with_powerupfreeze(self): # unused because freeze is not working so i disabled it
-        hits = pg.sprite.spritecollide(self, self.game.freezepwup, True)
-        if hits:
-            self.game.enemies.old_vx, self.game.enemies.old_vy = self.game.enemies.vx, self.game.enemies.vy  # Store old velocity
-            self.game.enemies.freeze()
+    # def collide_with_powerupfreeze(self): # unused because freeze is not working so i disabled it
+    #     hits = pg.sprite.spritecollide(self, self.game.freezepwup, True)
+    #     if hits:
+    #         self.game.enemies.old_vx, self.game.enemies.old_vy = self.game.enemies.vx, self.game.enemies.vy  # Store old velocity
+    #         self.game.enemies.freeze()
            
     def collide_with_bullet(self):
         hits = pg.sprite.spritecollide(self, self.game.bullets, False)

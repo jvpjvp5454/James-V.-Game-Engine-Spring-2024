@@ -217,7 +217,7 @@ class Game:
 
             self.wave += 1
             print(self.wave)
-            if self.wave == 3:  
+            if self.wave == 3 or self.wave == 6 or self.wave == 9:  
                  self.spawn_boss()
         if self.wave_timer_chargers < pg.time.get_ticks() and self.wave == 3:
             self.wave_timer_chargers = pg.time.get_ticks() + 1000
