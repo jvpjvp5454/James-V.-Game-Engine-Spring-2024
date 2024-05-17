@@ -213,6 +213,7 @@ class Game:
                 self.spawn_enemies()
             self.spawn_powerups()
             self.spawn_chargers()
+            self.spawn_stealth
             # self.spawn_stealth()
             self.wave += 1
             print(self.wave)
