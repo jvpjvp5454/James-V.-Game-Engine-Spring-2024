@@ -785,7 +785,7 @@ class BombRadius(Sprite):
         self.groups = game.all_sprites, game.bombs
         Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((150, 150))
+        self.image = pg.Surface((200, 200))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
         # self.rect.x = x 
