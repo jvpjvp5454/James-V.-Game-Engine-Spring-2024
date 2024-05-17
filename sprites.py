@@ -641,7 +641,7 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
             Bomb(self.game, x, y, self, -150, 150)
             Bomb(self.game, x, y, self, -150, -150)
             
-            self.bombcd = pg.time.get_ticks() + 7000
+            self.bombcd = pg.time.get_ticks() + 8000
             print("spawned bullet")
             print(self.x)
 
@@ -660,7 +660,7 @@ class EnemyBoss(Sprite): # Boss enemy, spawns bullets
                     Bullet(self.game, x, y, self, -300, -300)
                     Bullet(self.game, x, y, self, 300, -300)
                     Bullet(self.game, x, y, self, -300, 300)
-            self.bulletbarragecd = pg.time.get_ticks() + 4000
+            self.bulletbarragecd = pg.time.get_ticks() + 6000
 
         
 
@@ -785,7 +785,7 @@ class BombRadius(Sprite):
         self.groups = game.all_sprites, game.bombs
         Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((200, 200))
+        self.image = pg.Surface((300, 300))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
         # self.rect.x = x 
