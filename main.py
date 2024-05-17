@@ -93,6 +93,7 @@ class Game:
         self.enemychargers = pg.sprite.Group()
         self.healthkits = pg.sprite.Group()
         self.bombs = pg.sprite.Group()
+        self.stealthenemies = pg.sprite.Group() 
         #self.player = Player(self, 10, 10)
         #for x in range(10, 20):
             #Wall(self, x, 5)
@@ -151,15 +152,15 @@ class Game:
             y = random.randint(2,22)
             Enemy(self, x, y)
 
-    # def spawn_stealth(self):
-    #     for _ in range(random.randint(1, 2)):
-    #         # col = random.randint(1, len(self.map_data[0]) - 1)  # Random column
-    #         # row = random.randint(1, len(self.map_data) - 1)     # Random row
-    #         # if self.map_data == '.':
-    #         # print("I spawned enemies!" "(Hopefully)")
-    #         x = random.randint(2,30)
-    #         y = random.randint(2,22)
-    #         EnemyStealth(self, x, y)
+    def spawn_stealth(self):
+        for _ in range(random.randint(0,1)):
+            # col = random.randint(1, len(self.map_data[0]) - 1)  # Random column
+            # row = random.randint(1, len(self.map_data) - 1)     # Random row
+            # if self.map_data == '.':
+            # print("I spawned enemies!" "(Hopefully)")
+            x = random.randint(2,30)
+            y = random.randint(2,22)
+            EnemyStealth(self, x, y)
 
     
 

@@ -107,7 +107,7 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
                 self.vy = 0
                 self.rect.y = self.y
     # increases speed and kills powerup
-    def collide_with_powerup(self, dir):
+    def collide_with_powerup(self):
         hits = pg.sprite.spritecollide(self, self.game.pwup, True)
         global PLAYER_SPEED
         if hits:
@@ -121,7 +121,7 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
             self.hp = self.hp + 10
             self.healthtick = pg.time.get_ticks() + 250
 
-    def collide_with_powerupfreeze(self, dir): # unused because freeze is not working so i disabled it
+    def collide_with_powerupfreeze(self): # unused because freeze is not working so i disabled it
         hits = pg.sprite.spritecollide(self, self.game.freezepwup, True)
         if hits:
             self.game.enemies.old_vx, self.game.enemies.old_vy = self.game.enemies.vx, self.game.enemies.vy  # Store old velocity
@@ -185,10 +185,9 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         self.rect.y = self.y
         self.collide_with_walls('x')
         self.collide_with_walls('y')
-        self.collide_with_powerup('x')
-        self.collide_with_powerup('y')
-        self.collide_with_enemy('x')
-        self.collide_with_enemy('y')
+        self.collide_with_powerup()
+        self.collide_with_enemystealth()
+        self.collide_with_enemy()
         self.collide_with_group(self.game.coins, True)
         self.collide_with_bullet()
         self.collide_with_healthkit()
@@ -210,11 +209,18 @@ class Player(Sprite): # sprite class, neccesary properties such as x and y
         else: 
             self.image.fill(ORANGE)
 
-    def collide_with_enemy(self, dir):
+    def collide_with_enemy(self):
         hits = pg.sprite.spritecollide(self, self.game.enemies, False)
         if hits and not self.dmgcd > pg.time.get_ticks():
             #if not self.invurnable == True:
             self.hp = self.hp - 10
+            self.dmgcd = pg.time.get_ticks() + 200
+
+    def collide_with_enemystealth(self):
+        hits = pg.sprite.spritecollide(self, self.game.stealthenemies, False)
+        if hits and not self.dmgcd > pg.time.get_ticks():
+            #if not self.invurnable == True:
+            self.hp = self.hp - 50
             self.dmgcd = pg.time.get_ticks() + 200
             
 
@@ -796,7 +802,7 @@ class EnemyStealth(Sprite): # Stealth Enemy
     # enemy init
     def __init__(self, game, x, y):
         #self.spawn
-        self.groups = game.all_sprites, game.enemies
+        self.groups = game.all_sprites, game.stealthenemies
         Sprite.__init__(self, self.groups)
         self.game = game
         self.image = game.stealth_image
@@ -869,15 +875,14 @@ class EnemyStealth(Sprite): # Stealth Enemy
                 self.spincd = pg.time.get_ticks() +  1500
                 # produced by AI, modified to fit
                 self.angle = math.atan2(dy, dx) * 180 / math.pi
-                self.image = self.game.enemy_image2
                 nx = dx / (dist + 0.0001)
                 ny = dy / (dist + 0.0001)
-                speed = 400
+                speed = 450
                 self.vx = nx * speed
                 self.vy = ny * speed
                 self.cd =+ pg.time.get_ticks() + 2000
         else:
-            self.image.set_alpha(50)
+            self.image.set_alpha(25)
             print("test")
 
         
