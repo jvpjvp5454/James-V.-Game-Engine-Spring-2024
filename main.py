@@ -256,7 +256,7 @@ class Game:
         y = self.screen.get_height() - health_bar_height - padding  
         # End of Copilot gen code
         pg.draw.rect(self.screen, RED, (x, y, health_bar_width, health_bar_height))
-        pg.draw.rect(self.screen, color, (x, y, health_bar_width * (self.player.hp / 150), health_bar_height))
+        pg.draw.rect(self.screen, color, (x, y, health_bar_width * (self.player.hp / 200), health_bar_height))
         self.draw_text(self.screen, str(self.survtime.current_time), 24, WHITE, WIDTH/2 - 32, 2)
         dash_text = f"Dashes left: {self.player.dashes}"
         text_surface = self.font.render(dash_text, True, (255, 255, 255))  # White text
