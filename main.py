@@ -78,6 +78,7 @@ class Game:
 
         self.enemy_image = pg.image.load(path.join(images, 'yellowtrirotated.png')).convert_alpha()
         self.enemy_image2 = pg.image.load(path.join(images, 'redtrirotated.png')).convert_alpha()
+        self.stealth_image = pg.image.load(path.join(images, 'stealth.png')).convert_alpha()
 
     def new(self):
         # start all vars setup groups and instantiate classes
@@ -117,6 +118,8 @@ class Game:
                     Bullet(self, col ,row) # for testing purposes
                 if tile == 'm':
                     Bomb(self,col,row, self.boss, 0, 200)
+                if tile == 's':
+                    EnemyStealth(self, col, row)
 
                     # new_enemy.spawn(self.screen.get_width(), self.screen.get_height())
                 # if tile == '2':
@@ -148,6 +151,19 @@ class Game:
             y = random.randint(2,22)
             Enemy(self, x, y)
 
+    # def spawn_stealth(self):
+    #     for _ in range(random.randint(1, 2)):
+    #         # col = random.randint(1, len(self.map_data[0]) - 1)  # Random column
+    #         # row = random.randint(1, len(self.map_data) - 1)     # Random row
+    #         # if self.map_data == '.':
+    #         # print("I spawned enemies!" "(Hopefully)")
+    #         x = random.randint(2,30)
+    #         y = random.randint(2,22)
+    #         EnemyStealth(self, x, y)
+
+    
+
+
     def spawn_chargers(self):
         for _ in range(random.randint(0,1)):
             x = random.randint(2,30)
@@ -160,11 +176,11 @@ class Game:
             x = random.randint(1,30)
             y = random.randint(1,22)
             Powerup(self, x, y)
-        for _ in range(random.randint(3,7)):
+        for _ in range(random.randint(3,5)):
             x = random.randint(1,30)
             y = random.randint(1,22)
             Coin(self, x, y)
-        for _ in range(random.randint(0,2)):
+        for _ in range(random.randint(0,3)):
             x = random.randint(1,30)
             y = random.randint(1,22)
             Healthkit(self, x, y)
@@ -196,6 +212,7 @@ class Game:
                 self.spawn_enemies()
             self.spawn_powerups()
             self.spawn_chargers()
+            # self.spawn_stealth()
             self.wave += 1
             print(self.wave)
             if self.wave == 3:  
@@ -233,9 +250,10 @@ class Game:
             color = YELLOW
         else:
             color = DARKRED
-        # end of copilot gen codew
+     
         x = self.screen.get_width() - health_bar_width - padding
         y = self.screen.get_height() - health_bar_height - padding  
+        # End of Copilot gen code
         pg.draw.rect(self.screen, RED, (x, y, health_bar_width, health_bar_height))
         pg.draw.rect(self.screen, color, (x, y, health_bar_width * (self.player.hp / 150), health_bar_height))
         self.draw_text(self.screen, str(self.survtime.current_time), 24, WHITE, WIDTH/2 - 32, 2)
